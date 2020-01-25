@@ -12,10 +12,10 @@ public class Camera {
         this.rotation = rotation;
     }
 
-    private float[] getPosition() {
+    public float[] getPosition() {
         return position;
     }
-    private float[] getRotation() {
+    public float[] getRotation() {
         return rotation;
     }
 
