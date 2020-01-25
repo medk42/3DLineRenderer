@@ -7,7 +7,7 @@ import processing.core.PVector;
   First value: row
   Second value: column
 */
-class Matrix3D {
+public class Matrix3D {
     public static float[][] getTranslate(float dx, float dy, float dz) {
         return new float[][] {{1,0,0,dx}, {0,1,0,dy}, {0,0,1,dz}, {0,0,0,1}};
     }

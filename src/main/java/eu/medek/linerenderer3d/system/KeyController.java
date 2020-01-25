@@ -1,6 +1,6 @@
 package eu.medek.linerenderer3d.system;
 
-class KeyController {
+public class KeyController {
     private boolean[] pressedKeys = new boolean[256];
     private boolean[] toggledKeys = new boolean[256];
     private boolean debugLogging;
