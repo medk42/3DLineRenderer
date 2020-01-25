@@ -29,7 +29,7 @@ public class RecurTree extends Object3D {
         recalculateVertices();
     }
 
-    private void recalculateVertices() {
+    public void recalculateVertices() {
         if (debugLogging) System.out.print("Calculating verticies for tree... ");
         ArrayList<PVector> verticesTemp = new ArrayList<>();
         ArrayList<int[]> edgesTemp = new ArrayList<>();
