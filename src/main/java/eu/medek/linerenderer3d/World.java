@@ -75,7 +75,7 @@ class World {
         objects.sort((left, right) -> {
             float distRight = distSq(camera.getPosition(), new float[]{right.getPosition(0), right.getPosition(1), right.getPosition(2)});
             float distLeft = distSq(camera.getPosition(), new float[]{left.getPosition(0), left.getPosition(1), left.getPosition(2)});
-            return Float.compare(distRight, distLeft);
+            return Float.compare(distLeft, distRight);
         });
 
         for (Object3D obj : objects) {
@@ -151,7 +151,7 @@ class World {
                     (vertices.get(right[0]).y + vertices.get(right[1]).y)/2,
                     (vertices.get(right[0]).z + vertices.get(right[1]).z)/2,
             };
-            return Float.compare(distSq(camera.getPosition(), firstEdge),distSq(camera.getPosition(), secondEdge));
+            return Float.compare(distSq(camera.getPosition(), secondEdge),distSq(camera.getPosition(), firstEdge));
         });
 
 
