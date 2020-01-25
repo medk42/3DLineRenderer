@@ -8,8 +8,6 @@ import processing.core.PVector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 
 class World {
     //const
