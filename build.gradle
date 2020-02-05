@@ -2,10 +2,10 @@ plugins {
     id 'java'
 }
 
-group 'eu.medek'
+group 'eu.medek.linerenderer3d'
 version '1.0-SNAPSHOT'
 
-sourceCompatibility = 1.8
+sourceCompatibility = 11
 
 repositories {
     mavenCentral()
