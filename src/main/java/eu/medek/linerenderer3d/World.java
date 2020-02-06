@@ -15,24 +15,34 @@ class World {
     private static final float[][] toPerspectiveMatrix = new float[][] {{1,0,0,0}, {0,1,0,0}, {0,0,1,0}, {0,0,1/d,0}};
     private static final float[][] toPerspectiveNegativeMatrix = new float[][] {{1,0,0,0}, {0,1,0,0}, {0,0,1,0}, {0,0,-1/d,0}};
 
-    private final float[][] toScreenMatrix;
-
     //var
     private ArrayList<Object3D> objects = new ArrayList<>();
     private ArrayList<PVector> vertices = new ArrayList<>();
     private ArrayList<int[]> edges = new ArrayList<>();
     private PApplet pApplet;
+    private float windowWidth = 0, windowHeight = 0;
+
+    private float[][] toScreenMatrix;
 
     public World(PApplet pApplet) {
         this.pApplet = pApplet;
-        if (pApplet.height < pApplet.width) toScreenMatrix = Matrix3D.multiply(Matrix3D.getScale(pApplet.height,pApplet.height,1), Matrix3D.getTranslate(pApplet.width*0.5f/pApplet.height,0.5f,0));
-        else toScreenMatrix = Matrix3D.multiply(Matrix3D.getScale(pApplet.width,pApplet.width,1), Matrix3D.getTranslate(0.5f,pApplet.height*0.5f/pApplet.width,0));
+        setToScreenMatrix();
     }
 
 
     public void addObject(Object3D obj) {
         objects.add(obj);
         addObjectToCache(obj);
+    }
+
+    private void setToScreenMatrix() {
+        if (pApplet.width != windowWidth || pApplet.height != windowHeight) {
+            windowWidth = pApplet.width;
+            windowHeight = pApplet.height;
+
+            if (pApplet.height < pApplet.width) toScreenMatrix = Matrix3D.multiply(Matrix3D.getScale(pApplet.height,pApplet.height,1), Matrix3D.getTranslate(pApplet.width*0.5f/pApplet.height,0.5f,0));
+            else toScreenMatrix = Matrix3D.multiply(Matrix3D.getScale(pApplet.width,pApplet.width,1), Matrix3D.getTranslate(0.5f,pApplet.height*0.5f/pApplet.width,0));
+        }
     }
 
     private void addObjectToCache(Object3D obj) {
@@ -66,6 +76,7 @@ class World {
     }
 
     public void draw(final Camera camera, boolean debug, int edgeLimit) {
+        setToScreenMatrix();
         float[][] toCameraMatrix = camera.calculateToCameraMatrix();
 
         int totalVertices = 0, totalEdges = 0;
@@ -120,6 +131,8 @@ class World {
     }
 
     public void drawBackToFront (final Camera camera) {
+        setToScreenMatrix();
+
         float[][] toCameraMatrix = camera.calculateToCameraMatrix();
 
         PVector[] cameraVertices = new PVector[vertices.size()];
