@@ -10,6 +10,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 class World {
+
+    public enum DrawOrder {
+        SORT_EDGES, SORT_OBJECTS
+    }
+
     //const
     private static final float d = 1;
     private static final float[][] toPerspectiveMatrix = new float[][] {{1,0,0,0}, {0,1,0,0}, {0,0,1,0}, {0,0,1/d,0}};
@@ -71,15 +76,26 @@ class World {
         }
     }
 
-    public void draw(Camera camera) {
-        draw(camera, false, -1);
+    public void draw(final Camera camera, boolean debug, int edgeLimit, DrawOrder drawOrder) {
+        switch (drawOrder) {
+            case SORT_OBJECTS: drawObjects(camera, edgeLimit); break;
+            case SORT_EDGES: drawEdges(camera, edgeLimit); break;
+        }
+
+        if (debug) {
+            pApplet.fill(255);
+            pApplet.textSize(15);
+            pApplet.text("Total Vertices: " + vertices.size(), 10, 20);
+            pApplet.text("Total edges: " + edges.size(), 10, 40);
+            pApplet.text("Edge limit: " + ((edgeLimit >= 0) ? edgeLimit : "not active"), 10, 60);
+            pApplet.text("Draw order (sort by): " + drawOrder, 10, 80);
+            pApplet.text("FPS: " + pApplet.frameRate, 10, 100);
+        }
     }
 
-    public void draw(final Camera camera, boolean debug, int edgeLimit) {
+    private void drawObjects(final Camera camera, int edgeLimit) {
         setToScreenMatrix();
         float[][] toCameraMatrix = camera.calculateToCameraMatrix();
-
-        int totalVertices = 0, totalEdges = 0;
 
         objects.sort((left, right) -> {
             float distRight = distSq(camera.getPosition(), new float[]{right.getPosition(0), right.getPosition(1), right.getPosition(2)});
@@ -103,34 +119,22 @@ class World {
             for (int i = 0; i < perspectiveVertices.length; i++)
                 screenVertices[i] = Matrix3D.toPosition(Matrix3D.multiply(toScreenMatrix, Matrix3D.toVector(perspectiveVertices[i])));
 
-            int localEdgeLimit = edgeLimit;
             int[][] edges = obj.getEdges();
             for (int[] edge : edges) {
-                if (localEdgeLimit-- == 0) break;
+                if (edgeLimit-- == 0) break;
                 if (screenVertices[edge[0]].z >= 0 && screenVertices[edge[1]].z >= 0) {
                     if (edge.length >= 3) pApplet.stroke(edge[2]);
                     else pApplet.stroke(255);
                     if (edge.length >= 4) {
-                        pApplet.strokeWeight(Float.intBitsToFloat(edge[3]) / cameraVertices[edge[0]].z);
+                        pApplet.strokeWeight(Float.intBitsToFloat(edge[3]) / 1);//cameraVertices[edge[0]].z);
                     } else pApplet.strokeWeight(1);
                     pApplet.line(screenVertices[edge[0]].x, screenVertices[edge[0]].y, screenVertices[edge[1]].x, screenVertices[edge[1]].y);
                 }
             }
-
-            totalVertices += worldVertices.length;
-            totalEdges += edges.length;
-        }
-
-        if (debug) {
-            pApplet.fill(255);
-            pApplet.textSize(15);
-            pApplet.text("Total Vertices: " + totalVertices, 10, 20);
-            pApplet.text("Total edges: " + totalEdges, 10, 40);
-            pApplet.text("Edge limit: " + ((edgeLimit >= 0) ? edgeLimit : "not active"), 10, 60);
         }
     }
 
-    public void drawBackToFront (final Camera camera) {
+    private void drawEdges (final Camera camera, int edgeLimit) {
         setToScreenMatrix();
 
         float[][] toCameraMatrix = camera.calculateToCameraMatrix();
@@ -165,9 +169,8 @@ class World {
             return Float.compare(distSq(camera.getPosition(), secondEdge),distSq(camera.getPosition(), firstEdge));
         });
 
-
-
         for (int[] edge : edges) {
+            if (edgeLimit-- == 0) break;
             if (screenVertices[edge[0]].z >= 0 && screenVertices[edge[1]].z >= 0) {
                 if (edge.length >= 3) pApplet.stroke(edge[2]);
                 else pApplet.stroke(255);

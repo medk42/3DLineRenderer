@@ -58,8 +58,8 @@ public class Entry extends PApplet {
 
         background(0);
         stroke(255);
-        if (keyController.isToggled('p') ^ keyController.isToggled('P')) world.draw(camera, keyController.isToggled('k')^keyController.isToggled('K'), (keyController.isToggled('j')^keyController.isToggled('J'))?2000:-1);
-        else world.drawBackToFront(camera);
+        if (keyController.isToggled('p') ^ keyController.isToggled('P')) world.draw(camera, keyController.isToggled('k')^keyController.isToggled('K'), (keyController.isToggled('j')^keyController.isToggled('J'))?2000:-1, World.DrawOrder.SORT_OBJECTS);
+        else world.draw(camera, keyController.isToggled('k')^keyController.isToggled('K'), (keyController.isToggled('j')^keyController.isToggled('J'))?2000:-1, World.DrawOrder.SORT_EDGES);
 
         if (keyController.isToggled('u') ^ keyController.isToggled('U')) {
             stroke(255);
