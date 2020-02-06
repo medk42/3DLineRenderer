@@ -126,7 +126,7 @@ class World {
                     if (edge.length >= 3) pApplet.stroke(edge[2]);
                     else pApplet.stroke(255);
                     if (edge.length >= 4) {
-                        pApplet.strokeWeight(Float.intBitsToFloat(edge[3]) / 1);//cameraVertices[edge[0]].z);
+                        pApplet.strokeWeight(Float.intBitsToFloat(edge[3]) / cameraVertices[edge[0]].z);
                     } else pApplet.strokeWeight(1);
                     pApplet.line(screenVertices[edge[0]].x, screenVertices[edge[0]].y, screenVertices[edge[1]].x, screenVertices[edge[1]].y);
                 }
