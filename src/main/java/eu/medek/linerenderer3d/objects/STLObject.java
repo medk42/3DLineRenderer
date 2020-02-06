@@ -3,12 +3,10 @@ package eu.medek.linerenderer3d.objects;
 import eu.medek.linerenderer3d.system.stlreader.STLReader;
 import eu.medek.linerenderer3d.system.stlreader.STLTriangle;
 import eu.medek.linerenderer3d.system.stlreader.Vertex;
-import processing.core.PApplet;
 import processing.core.PVector;
 
 import java.io.IOException;
 import java.nio.file.Path;
-import java.util.Arrays;
 
 public class STLObject extends Object3D {
     private final PVector[] verticies;
@@ -18,7 +16,7 @@ public class STLObject extends Object3D {
         super(position, rotation, scale);
 
         STLReader reader = new STLReader(path);
-        STLTriangle[] tris = reader.readAsBinaryFile();
+        STLTriangle[] tris = reader.tryRead();
 
         verticies = new PVector[tris.length*3];
         edges = new int[tris.length*3][2];

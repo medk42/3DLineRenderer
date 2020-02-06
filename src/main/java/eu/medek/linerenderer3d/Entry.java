@@ -44,8 +44,9 @@ public class Entry extends PApplet {
 //        world.addObject(tree);
 //        world.addObject(new Bench(new float[]{0, 0, -.125f}, new float[]{0,0,0}, new float[]{.3f,.3f,.3f}));
         try {
-            world.addObject(new STLObject(new float[]{2,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\Touchpad\\3d\\raspberry-pi-holder-top.STL")));
-            world.addObject(new STLObject(new float[]{0,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\Touchpad\\3d\\raspberry-pi-holder-top.STL")));
+            world.addObject(new STLObject(new float[]{2,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\raspberry-pi-holder-top.STL")));
+            world.addObject(new STLObject(new float[]{0,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\raspberry-pi-holder-bottom.STL")));
+            world.addObject(new STLObject(new float[]{-2,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\Sphericon.stl")));
         } catch (IOException e) {
             e.printStackTrace();
         }
