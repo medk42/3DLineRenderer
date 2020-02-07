@@ -100,7 +100,7 @@ class World {
         objects.sort((left, right) -> {
             float distRight = distSq(camera.getPosition(), new float[]{right.getPosition(0), right.getPosition(1), right.getPosition(2)});
             float distLeft = distSq(camera.getPosition(), new float[]{left.getPosition(0), left.getPosition(1), left.getPosition(2)});
-            return Float.compare(distLeft, distRight);
+            return Float.compare(distRight, distLeft);
         });
 
         for (Object3D obj : objects) {
