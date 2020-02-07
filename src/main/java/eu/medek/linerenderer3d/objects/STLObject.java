@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 public class STLObject extends Object3D {
-    private final PVector[] verticies;
+    private final PVector[] vertices;
     private final int[][] edges;
 
     public STLObject(float[] position, float[] rotation, float[] scale, Path path) throws IOException {
@@ -18,13 +18,13 @@ public class STLObject extends Object3D {
         STLReader reader = new STLReader(path);
         STLTriangle[] tris = reader.tryRead();
 
-        verticies = new PVector[tris.length*3];
+        vertices = new PVector[tris.length*3];
         edges = new int[tris.length*3][2];
 
         for (int i = 0; i < tris.length; i++) {
-            verticies[3*i] = vertexToPVector(tris[i].getP1());
-            verticies[3*i+1] = vertexToPVector(tris[i].getP2());
-            verticies[3*i+2] = vertexToPVector(tris[i].getP3());
+            vertices[3*i] = vertexToPVector(tris[i].getP1());
+            vertices[3*i+1] = vertexToPVector(tris[i].getP2());
+            vertices[3*i+2] = vertexToPVector(tris[i].getP3());
 
             edges[3*i] = new int[]{3*i, 3*i+1};
             edges[3*i+1] = new int[]{3*i+1, 3*i+2};
@@ -32,12 +32,12 @@ public class STLObject extends Object3D {
         }
 
         PVector center = new PVector();
-        for (PVector vertex : verticies) center.add(vertex);
-        center.div(verticies.length);
-        for (PVector vertex : verticies) vertex.sub(center);
+        for (PVector vertex : vertices) center.add(vertex);
+        center.div(vertices.length);
+        for (PVector vertex : vertices) vertex.sub(center);
 
         PVector min = new PVector(), max = new PVector();
-        for (PVector vertex : verticies) {
+        for (PVector vertex : vertices) {
             if (vertex.x < min.x) min.x = vertex.x;
             if (vertex.y < min.y) min.y = vertex.y;
             if (vertex.z < min.z) min.z = vertex.z;
@@ -48,7 +48,7 @@ public class STLObject extends Object3D {
         }
         PVector delta = PVector.sub(max,min);
         float dist = Math.max(delta.x, Math.max(delta.y, delta.z));
-        for (PVector vertex : verticies) vertex.div(dist);
+        for (PVector vertex : vertices) vertex.div(dist);
 
     }
 
@@ -58,7 +58,7 @@ public class STLObject extends Object3D {
 
     @Override
     public PVector[] getVertices() {
-        return verticies;
+        return vertices;
     }
 
     @Override
