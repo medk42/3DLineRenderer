@@ -30,4 +30,9 @@ public class Box extends Object3D {
     public int[][] getEdges() {
         return edges;
     }
+
+    @Override
+    protected Object3D[] getNestedAbstract() {
+        return new Object3D[0];
+    }
 }

@@ -20,7 +20,7 @@ public class Entry extends PApplet {
     private World world;
     private Camera camera;
     private KeyController keyController = new KeyController(false);
-    private RecurTree tree = new RecurTree(new float[]{0, 0, 0}, new float[]{0,0,0}, new float[]{1,1,1}, true);
+    private RecurTree tree = new RecurTree(new float[]{0, 0, 2}, new float[]{0,0,0}, new float[]{1,1,1}, true);
     private RotatingCameraController cameraController = new RotatingCameraController(new PVector(0,-0.5f,0), 1.5f, -.5f, PERIOD);
 
     private GLWindow mouseMover = null;
@@ -41,8 +41,8 @@ public class Entry extends PApplet {
         world = new World(this);
         camera = new Camera(new float[]{0,0,0}, new float[]{0,0,0});
 //        world.addObject(new Box(new float[]{0, -0.5f, 0}, new float[]{/*PI/3,PI/5*/0,0,0}, new float[]{1,1,1}));
-//        world.addObject(tree);
-//        world.addObject(new Bench(new float[]{0, 0, -.125f}, new float[]{0,0,0}, new float[]{.3f,.3f,.3f}));
+        world.addObject(tree);
+        world.addObject(new Bench(new float[]{0, 0, 1}, new float[]{0,0,0}, new float[]{1f,1f,1f}));
         try {
             world.addObject(new STLObject(new float[]{2,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\raspberry-pi-holder-top.STL")));
             world.addObject(new STLObject(new float[]{0,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\raspberry-pi-holder-bottom.STL")));

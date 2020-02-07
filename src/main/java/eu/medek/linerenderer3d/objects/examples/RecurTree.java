@@ -44,7 +44,7 @@ public class RecurTree extends Object3D {
 
         edges = new int[edgesTemp.size()][];
         edges = edgesTemp.toArray(edges);
-        invalidateCache();
+        invalidateVertexCache();
         if (debugLogging) System.out.println("done");
     }
 
@@ -76,5 +76,10 @@ public class RecurTree extends Object3D {
     @Override
     public int[][] getEdges() {
         return edges;
+    }
+
+    @Override
+    protected Object3D[] getNestedAbstract() {
+        return new Object3D[0];
     }
 }
