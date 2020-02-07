@@ -52,7 +52,7 @@ class World {
 
     private void addObjectToCache(Object3D obj) {
         PVector[] objVerticesWorld = obj.calculateWorldVertices();
-        int[][] objEdges = obj.getEdges();
+        int[][] objEdges = obj.getEdgesAll();
 
         int deltaVertices = vertices.size();
 
@@ -119,7 +119,7 @@ class World {
             for (int i = 0; i < perspectiveVertices.length; i++)
                 screenVertices[i] = Matrix3D.toPosition(Matrix3D.multiply(toScreenMatrix, Matrix3D.toVector(perspectiveVertices[i])));
 
-            int[][] edges = obj.getEdges();
+            int[][] edges = obj.getEdgesAll();
             for (int[] edge : edges) {
                 if (edgeLimit-- == 0) break;
                 if (screenVertices[edge[0]].z >= 0 && screenVertices[edge[1]].z >= 0) {

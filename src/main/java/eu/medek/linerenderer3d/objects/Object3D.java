@@ -228,19 +228,34 @@ public abstract class Object3D {
      */
     public int[][] getEdgesAll() {
         if (precalculatedAllEdges == null) {
-            int edgesCount = getEdges().length;
-
+            int[][] localEdges = getEdges();
+            int edgesCount = localEdges.length;
             Object3D[] nested = getNested();
             int[][][] nestedEdges = new int[nested.length][][];
             for (int i = 0; i < nested.length; i++) {
-                nestedEdges[i] = nested[i].getEdges();
+                nestedEdges[i] = nested[i].getEdgesAll();
                 edgesCount += nestedEdges[i].length;
             }
 
             precalculatedAllEdges = new int[edgesCount][];
-            int id = 0;
-            for (int[][] childEdges : nestedEdges) {
-                for (int i = 0; i < childEdges.length; i++, id++) precalculatedAllEdges[id] = childEdges[i];
+            int id = 0, delta = 0;
+            for (int i = 0; i < nested.length; i++) {
+                int[][] childEdges = nestedEdges[i];
+                for (int j = 0; j < childEdges.length; j++, id++) {
+                    precalculatedAllEdges[id] = new int[childEdges[j].length];
+                    if (childEdges[j].length >= 4) precalculatedAllEdges[id][3] = childEdges[j][3];
+                    if (childEdges[j].length >= 3) precalculatedAllEdges[id][2] = childEdges[j][2];
+                    precalculatedAllEdges[id][0] = childEdges[j][0] + delta;
+                    precalculatedAllEdges[id][1] = childEdges[j][1] + delta;
+                }
+                delta += nested[i].calculateWorldVertices().length;
+            }
+            for (int i = 0; i < localEdges.length; i++, id++) {
+                precalculatedAllEdges[id] = new int[localEdges[i].length];
+                if (localEdges[i].length >= 4) precalculatedAllEdges[id][3] = localEdges[i][3];
+                if (localEdges[i].length >= 3) precalculatedAllEdges[id][2] = localEdges[i][2];
+                precalculatedAllEdges[id][0] = localEdges[i][0] + delta;
+                precalculatedAllEdges[id][1] = localEdges[i][1] + delta;
             }
         }
 
