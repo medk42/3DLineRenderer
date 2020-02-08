@@ -65,10 +65,26 @@ public class Entry extends PApplet {
 
         background(0);
         stroke(255);
-        if (keyController.isToggled('p', true)) world.draw(camera, keyController.isToggled('k', true), keyController.isToggled('j', true)?2000:-1, World.DrawOrder.SORT_OBJECTS);
-        else world.draw(camera, keyController.isToggled('k', true), keyController.isToggled('j', true)?2000:-1, World.DrawOrder.SORT_EDGES);
 
-        if (keyController.isToggled('u', true)) {
+        int edgeLimit = 2000;
+        boolean edgeLimitActive = keyController.isToggled('j', true);
+        boolean debug = keyController.isToggled('k', true);
+        boolean crosshair = keyController.isToggled('u', true);
+        World.DrawOrder drawOrder = keyController.isToggled('p', true) ? World.DrawOrder.SORT_OBJECTS : World.DrawOrder.SORT_EDGES;
+
+        world.draw(camera, edgeLimitActive?edgeLimit:-1, drawOrder);
+
+        if (debug) {
+            fill(255);
+            textSize(15);
+            text("Total Vertices: " + world.getVertexCount(), 10, 20);
+            text("Total edges: " + world.getEdgeCount(), 10, 40);
+            text("Edge limit: " + (edgeLimitActive ? edgeLimit : "not active"), 10, 60);
+            text("Draw order (sort by): " + drawOrder, 10, 80);
+            text("FPS: " + frameRate, 10, 100);
+        }
+
+        if (crosshair) {
             stroke(255);
             strokeWeight(1);
             line(width/2f-10, height/2f-10, width/2f+10, height/2f+10);

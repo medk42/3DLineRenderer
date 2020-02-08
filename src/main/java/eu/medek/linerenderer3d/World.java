@@ -83,22 +83,20 @@ class World {
         edges = null;
     }
 
-    public void draw(final Camera camera, boolean debug, int edgeLimit, DrawOrder drawOrder) {
+    public int getVertexCount() {
+        return vertices.size();
+    }
+
+    public int getEdgeCount() {
+        return edges.size();
+    }
+
+    public void draw(final Camera camera, int edgeLimit, DrawOrder drawOrder) {
         if (vertices == null || edges == null) updateCache();
 
         switch (drawOrder) {
             case SORT_OBJECTS: drawObjects(camera, edgeLimit); break;
             case SORT_EDGES: drawEdges(camera, edgeLimit); break;
-        }
-
-        if (debug) {
-            pApplet.fill(255);
-            pApplet.textSize(15);
-            pApplet.text("Total Vertices: " + vertices.size(), 10, 20);
-            pApplet.text("Total edges: " + edges.size(), 10, 40);
-            pApplet.text("Edge limit: " + ((edgeLimit >= 0) ? edgeLimit : "not active"), 10, 60);
-            pApplet.text("Draw order (sort by): " + drawOrder, 10, 80);
-            pApplet.text("FPS: " + pApplet.frameRate, 10, 100);
         }
     }
 
