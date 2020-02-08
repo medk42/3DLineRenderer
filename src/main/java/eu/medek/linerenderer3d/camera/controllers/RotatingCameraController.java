@@ -27,6 +27,6 @@ public class RotatingCameraController {
         cameraPosition[1] = center.y + deltaHeight;
         cameraRotation[0] = (float)Math.atan(deltaHeight/radius);
         cameraRotation[2] = 0;
-        cameraRotation[1] = -angle - (float)Math.PI/2;
+        cameraRotation[1] = angle - (float)Math.PI/2;
     }
 }
