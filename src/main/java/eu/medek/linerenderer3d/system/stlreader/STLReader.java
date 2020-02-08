@@ -9,13 +9,28 @@ import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
 
+/**
+ * Class used for parsing STL files.
+ */
 public class STLReader {
+    /**
+     * Path to the file to be parsed.
+     */
     private Path file;
 
+    /**
+     * Basic constructor
+     * @param file file to be parsed
+     */
     public STLReader(Path file) {
         this.file = file;
     }
 
+    /**
+     * Try to determine whether specified file is binary or text and read it as such.
+     * @return triangles specified in the file
+     * @throws IOException if any error arises while reading the file
+     */
     public STLTriangle[] tryRead() throws IOException {
         byte[] fileBytes = Files.readAllBytes(file);
         if (fileBytes.length < 84) return readAsTextFile();
@@ -26,6 +41,11 @@ public class STLReader {
         else return readAsTextFile();
     }
 
+    /**
+     * Read the specified file as a binary file.
+     * @return triangles specified in the file
+     * @throws IOException if any error arises while reading the file
+     */
     public STLTriangle[] readAsBinaryFile() throws IOException {
         byte[] fileBytes = Files.readAllBytes(file);
 
@@ -45,6 +65,11 @@ public class STLReader {
         return triangles;
     }
 
+    /**
+     * Read the specified file as a text file.
+     * @return triangles specified in the file
+     * @throws FileNotFoundException if any error arises while reading the file
+     */
     public STLTriangle[] readAsTextFile() throws FileNotFoundException {
         Scanner fileScanner = new Scanner(new FileInputStream(file.toFile()));
         fileScanner.useLocale(Locale.US);
@@ -61,6 +86,11 @@ public class STLReader {
         return trianglesList.toArray(STLTriangle[]::new);
     }
 
+    /**
+     * Read and create the next triangle from the text file.
+     * @param fileScanner scanner reading the text file
+     * @return next triangle
+     */
     private STLTriangle readTextTriangle(Scanner fileScanner) {
         String token;
         ArrayList<Vertex> vertices = new ArrayList<>(3);
@@ -84,6 +114,12 @@ public class STLReader {
         return new STLTriangle(vertices.get(0), vertices.get(1), vertices.get(2), normalX, normalY, normalZ);
     }
 
+    /**
+     * Read a vertex/point from the binary file.
+     * @param array array containing the file in byte format
+     * @param offset where to start reading
+     * @return vertex read from the binary file at specified offset
+     */
     private Vertex readBinaryVertex(byte[] array, int offset) {
         float x = bytesToFloat(array, offset);
         float y = bytesToFloat(array, offset + 4);
@@ -91,6 +127,12 @@ public class STLReader {
         return new Vertex(x, y, z);
     }
 
+    /**
+     * Convert 4 bytes into int.
+     * @param array byte array
+     * @param offset where to start reading
+     * @return integer read from the array at specified offset in little endian
+     */
     private static int bytesToInt(byte[] array, int offset) {
         return  (array[3 + offset]<<24)&0xff000000|
                 (array[2 + offset]<<16)&0x00ff0000|
@@ -98,11 +140,22 @@ public class STLReader {
                 (array[offset])&0x000000ff;
     }
 
+    /**
+     * Convert 4 bytes into float.
+     * @param array byte array
+     * @param offset where to start reading
+     * @return float read from the array at specified offset in little endian
+     */
     private static float bytesToFloat(byte[] array, int offset) {
         int intValue = bytesToInt(array, offset);
         return Float.intBitsToFloat(intValue);
     }
 
+    /**
+     * Quick test of the functionality of this class. Prints triangles parsed from the file specified as an argument.
+     * @param args path to some STL file
+     * @throws IOException if any error arises while reading the file
+     */
     public static void main(String[] args) throws IOException {
         Path path = Path.of(args[0]);
         STLReader reader = new STLReader(path);
