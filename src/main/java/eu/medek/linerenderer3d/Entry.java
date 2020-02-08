@@ -41,7 +41,33 @@ public class Entry extends PApplet {
     public void setup() {
         mouseMover = (GLWindow) surface.getNative();
 
-        world = new World(this);
+        world = new World(new Renderer() {
+            @Override
+            public int getWidth() {
+                return width;
+            }
+
+            @Override
+            public int getHeight() {
+                return height;
+            }
+
+            @Override
+            public void setStrokeColor(int r, int g, int b) {
+                stroke(r,g,b);
+            }
+
+            @Override
+            public void setStrokeWeight(float strokeWeight) {
+                strokeWeight(strokeWeight);
+            }
+
+            @Override
+            public void line(float x0, float y0, float x1, float y1) {
+                Entry.this.line(x0, y0, x1, y1);
+            }
+        });
+
         camera = new Camera(new float[]{0,0,0}, new float[]{0,0,0});
 //        world.addObject(new Box(new float[]{0, -0.5f, 0}, new float[]{/*PI/3,PI/5*/0,0,0}, new float[]{1,1,1}));
         world.addObject(tree);

@@ -1,10 +1,10 @@
 package eu.medek.linerenderer3d;
 
 import eu.medek.linerenderer3d.camera.Camera;
+import eu.medek.linerenderer3d.system.Color;
 import eu.medek.linerenderer3d.system.Matrix3D;
 import eu.medek.linerenderer3d.objects.Object3D;
 import eu.medek.linerenderer3d.system.Vector;
-import processing.core.PApplet;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -24,13 +24,13 @@ class World {
     private ArrayList<Object3D> objects = new ArrayList<>();
     private ArrayList<Vector> vertices = null;
     private ArrayList<int[]> edges = null;
-    private PApplet pApplet;
-    private float windowWidth = 0, windowHeight = 0;
+    private Renderer renderer;
+    private int windowWidth = 0, windowHeight = 0;
 
     private float[][] toScreenMatrix;
 
-    public World(PApplet pApplet) {
-        this.pApplet = pApplet;
+    public World(Renderer renderer) {
+        this.renderer = renderer;
         setToScreenMatrix();
     }
 
@@ -41,12 +41,12 @@ class World {
     }
 
     private void setToScreenMatrix() {
-        if (pApplet.width != windowWidth || pApplet.height != windowHeight) {
-            windowWidth = pApplet.width;
-            windowHeight = pApplet.height;
+        if (renderer.getWidth() != windowWidth || renderer.getHeight() != windowHeight) {
+            windowWidth = renderer.getWidth();
+            windowHeight = renderer.getHeight();
 
-            if (pApplet.height < pApplet.width) toScreenMatrix = Matrix3D.multiply(Matrix3D.getScale(pApplet.height,pApplet.height,1), Matrix3D.getTranslate(pApplet.width*0.5f/pApplet.height,0.5f,0));
-            else toScreenMatrix = Matrix3D.multiply(Matrix3D.getScale(pApplet.width,pApplet.width,1), Matrix3D.getTranslate(0.5f,pApplet.height*0.5f/pApplet.width,0));
+            if (windowHeight < windowWidth) toScreenMatrix = Matrix3D.multiply(Matrix3D.getScale(windowHeight,windowHeight,1), Matrix3D.getTranslate(windowWidth*0.5f/windowHeight,0.5f,0));
+            else toScreenMatrix = Matrix3D.multiply(Matrix3D.getScale(windowWidth,windowWidth,1), Matrix3D.getTranslate(0.5f,windowHeight*0.5f/windowWidth,0));
         }
     }
 
@@ -130,11 +130,11 @@ class World {
             for (int[] edge : edges) {
                 if (edgeLimit-- == 0) return;
                 if (screenVertices[edge[0]].z >= 0 && screenVertices[edge[1]].z >= 0) {
-                    if (edge.length >= 3) pApplet.stroke(edge[2]);
-                    else pApplet.stroke(255);
+                    if (edge.length >= 3) renderer.setStrokeColor(Color.getR(edge[2]), Color.getG(edge[2]), Color.getB(edge[2]));
+                    else renderer.setStrokeColor(255, 255, 255);
                     if (edge.length >= 4) {
-                        pApplet.strokeWeight(Float.intBitsToFloat(edge[3]) / cameraVertices[edge[0]].mag());
-                    } else pApplet.strokeWeight(1);
+                        renderer.setStrokeWeight(Float.intBitsToFloat(edge[3]) / cameraVertices[edge[0]].mag());
+                    } else renderer.setStrokeWeight(1);
                     drawLineClipped(screenVertices[edge[0]].x, screenVertices[edge[0]].y, screenVertices[edge[1]].x, screenVertices[edge[1]].y);
                 }
             }
@@ -143,7 +143,6 @@ class World {
 
     private void drawEdges (final Camera camera, int edgeLimit) {
         setToScreenMatrix();
-
         float[][] toCameraMatrix = camera.calculateToCameraMatrix();
 
         Vector[] cameraVertices = new Vector[vertices.size()];
@@ -179,12 +178,12 @@ class World {
         for (int[] edge : edges) {
             if (edgeLimit-- == 0) return;
             if (screenVertices[edge[0]].z >= 0 && screenVertices[edge[1]].z >= 0) {
-                if (edge.length >= 3) pApplet.stroke(edge[2]);
-                else pApplet.stroke(255);
+                if (edge.length >= 3) renderer.setStrokeColor(Color.getR(edge[2]), Color.getG(edge[2]), Color.getB(edge[2]));
+                else renderer.setStrokeColor(255, 255, 255);
                 if (edge.length >= 4) {
-                    pApplet.strokeWeight(Float.intBitsToFloat(edge[3]) / cameraVertices[edge[0]].mag());
+                    renderer.setStrokeWeight(Float.intBitsToFloat(edge[3]) / cameraVertices[edge[0]].mag());
                 }
-                else pApplet.strokeWeight(1);
+                else renderer.setStrokeWeight(1);
                 drawLineClipped(screenVertices[edge[0]].x, screenVertices[edge[0]].y, screenVertices[edge[1]].x, screenVertices[edge[1]].y);
             }
         }
@@ -199,12 +198,12 @@ class World {
 
     private void drawLineClipped(float x0, float y0, float x1, float y1) {
         boolean p0In = inWindow(x0, y0), p1In = inWindow(x1, y1);
-        if (p0In && p1In) pApplet.line(x0, y0, x1, y1);
+        if (p0In && p1In) renderer.line(x0, y0, x1, y1);
         else {
+            int[][] borders = {{0,0,0,windowHeight-1}, {0,0,windowWidth-1,0}, {windowWidth-1,0,windowWidth-1,windowHeight-1},
+                    {0,windowHeight-1,windowWidth-1,windowHeight-1}};
             Vector[] intersectionPoints = new Vector[4];
             int i = 0;
-            int width = pApplet.width, height = pApplet.height;
-            int[][] borders = {{0,0,0,height-1}, {0,0,width-1,0}, {width-1,0,width-1,height-1},{0,height-1,width-1,height-1}};
             for (int[] border : borders) {
                 Vector intersection = getIntersection(x0,y0,x1,y1,border[0],border[1],border[2],border[3]);
                 if (intersection != null) intersectionPoints[i++] = intersection;
@@ -212,13 +211,13 @@ class World {
 
             if (!p0In && !p1In) {
                 if (intersectionPoints[0] == null || intersectionPoints[1] == null) return;
-                pApplet.line(intersectionPoints[0].x, intersectionPoints[0].y, intersectionPoints[1].x, intersectionPoints[1].y);
+                renderer.line(intersectionPoints[0].x, intersectionPoints[0].y, intersectionPoints[1].x, intersectionPoints[1].y);
             } else if (!p0In) {
                 if (intersectionPoints[0] == null) return;
-                pApplet.line(intersectionPoints[0].x, intersectionPoints[0].y, x1, y1);
+                renderer.line(intersectionPoints[0].x, intersectionPoints[0].y, x1, y1);
             } else {
                 if (intersectionPoints[0] == null) return;
-                pApplet.line(x0, y0, intersectionPoints[0].x, intersectionPoints[0].y);
+                renderer.line(x0, y0, intersectionPoints[0].x, intersectionPoints[0].y);
             }
         }
     }
@@ -243,6 +242,6 @@ class World {
     }
 
     private boolean inWindow(float x, float y) {
-        return (x >= 0 && y >= 0 && x < pApplet.width && y < pApplet.height);
+        return (x >= 0 && y >= 0 && x < windowWidth && y < windowHeight);
     }
 }
