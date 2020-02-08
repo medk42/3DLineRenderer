@@ -22,6 +22,7 @@ public class Entry extends PApplet {
     private KeyController keyController = new KeyController(false);
     private RecurTree tree = new RecurTree(new float[]{0, 0, 2}, new float[]{0,0,0}, new float[]{1,1,1}, true);
     private RotatingCameraController cameraController = new RotatingCameraController(new PVector(0,-0.5f,0), 1.5f, -.5f, PERIOD);
+    private NestedPyramid nestedPyramid = new NestedPyramid(new float[]{0, 0, 2}, new float[]{0,0,0}, new float[]{.5f,.5f,.5f}, 5, (float)(Math.PI/6));
 
     private GLWindow mouseMover = null;
     private boolean mouseLock = false;
@@ -44,7 +45,7 @@ public class Entry extends PApplet {
         //world.addObject(tree);
         //world.addObject(new Bench(new float[]{0, 0, 1}, new float[]{0,0,0}, new float[]{1f,1f,1f}));
         world.addObject(new NestedLines(new float[]{0, 0, 1}, new float[]{0,0,0}, new float[]{1f,1f,1f}, 5));
-        world.addObject(new NestedPyramid(new float[]{0, 0, 2}, new float[]{0,0,0}, new float[]{.5f,.5f,.5f}, 5, (float)(Math.PI/6)));
+        world.addObject(nestedPyramid);
         try {
             //world.addObject(new STLObject(new float[]{2,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\raspberry-pi-holder-top.STL")));
             world.addObject(new STLObject(new float[]{0,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\raspberry-pi-holder-bottom.STL")));
@@ -56,6 +57,8 @@ public class Entry extends PApplet {
 
     @Override
     public void draw() {
+        nestedPyramid.updateRecursionAngle((System.currentTimeMillis() - millisStart)/1000f*TWO_PI/10);
+        world.invalidateCache();
         handleCameraMovement();
 
         background(0);

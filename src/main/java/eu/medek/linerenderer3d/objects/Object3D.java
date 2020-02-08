@@ -158,7 +158,7 @@ public abstract class Object3D {
     }
 
     /**
-     * Invalidate cached values for world vertices.
+     * Invalidate cached values for world vertices. Recursively calls itself on parent.
      */
     public void invalidateVertexCache() {
         precalculatedVertices = null;

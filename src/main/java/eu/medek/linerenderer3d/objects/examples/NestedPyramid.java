@@ -28,6 +28,27 @@ public class NestedPyramid extends Object3D {
         } else children = new NestedPyramid[0];
     }
 
+    public void updateRecursionAngle(float newRecursionAngle) {
+        if (children.length == 0) return;
+
+        children[0].setRotation(0, -newRecursionAngle);
+        children[0].setRotation(2, newRecursionAngle);
+
+        children[1].setRotation(0, -newRecursionAngle);
+        children[1].setRotation(2, -newRecursionAngle);
+
+        children[2].setRotation(0, newRecursionAngle);
+        children[2].setRotation(2, -newRecursionAngle);
+
+        children[3].setRotation(0, newRecursionAngle);
+        children[3].setRotation(2, newRecursionAngle);
+
+        children[0].updateRecursionAngle(newRecursionAngle);
+        children[1].updateRecursionAngle(newRecursionAngle);
+        children[2].updateRecursionAngle(newRecursionAngle);
+        children[3].updateRecursionAngle(newRecursionAngle);
+    }
+
     @Override
     public PVector[] getVertices() {
         return vertices;
