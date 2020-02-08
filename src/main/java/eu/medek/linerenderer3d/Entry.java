@@ -63,10 +63,10 @@ public class Entry extends PApplet {
 
         background(0);
         stroke(255);
-        if (keyController.isToggled('p') ^ keyController.isToggled('P')) world.draw(camera, keyController.isToggled('k')^keyController.isToggled('K'), (keyController.isToggled('j')^keyController.isToggled('J'))?2000:-1, World.DrawOrder.SORT_OBJECTS);
-        else world.draw(camera, keyController.isToggled('k')^keyController.isToggled('K'), (keyController.isToggled('j')^keyController.isToggled('J'))?2000:-1, World.DrawOrder.SORT_EDGES);
+        if (keyController.isToggled('p', true)) world.draw(camera, keyController.isToggled('k', true), keyController.isToggled('j', true)?2000:-1, World.DrawOrder.SORT_OBJECTS);
+        else world.draw(camera, keyController.isToggled('k', true), keyController.isToggled('j', true)?2000:-1, World.DrawOrder.SORT_EDGES);
 
-        if (keyController.isToggled('u') ^ keyController.isToggled('U')) {
+        if (keyController.isToggled('u', true)) {
             stroke(255);
             strokeWeight(1);
             line(width/2f-10, height/2f-10, width/2f+10, height/2f+10);
@@ -75,8 +75,8 @@ public class Entry extends PApplet {
     }
 
     void handleCameraMovement() {
-        if (!(keyController.isToggled('i') ^ keyController.isToggled('I'))) {
-            float localSpeed = (keyController.isToggled('l') ^ keyController.isToggled('L')) ? SPEED*3 : SPEED;
+        if (!keyController.isToggled('i', true)) {
+            float localSpeed = (keyController.isToggled('l', true)) ? SPEED*3 : SPEED;
             PVector forward = new PVector(0,0,1);
             forward = camera.getTransformedVector(forward);
             forward.mult(localSpeed);
@@ -93,19 +93,19 @@ public class Entry extends PApplet {
 
             PVector cameraPosition = new PVector(cameraPositionFloat[0], cameraPositionFloat[1], cameraPositionFloat[2]);
 
-            if (keyController.isPressed('W')) cameraPosition.z+=localSpeed;
-            if (keyController.isPressed('S')) cameraPosition.z-=localSpeed;
-            if (keyController.isPressed('E')) cameraPosition.y-=localSpeed;
-            if (keyController.isPressed('Q')) cameraPosition.y+=localSpeed;
-            if (keyController.isPressed('A')) cameraPosition.x-=localSpeed;
-            if (keyController.isPressed('D')) cameraPosition.x+=localSpeed;
+            if (keyController.isPressed('W', false)) cameraPosition.z+=localSpeed;
+            if (keyController.isPressed('S', false)) cameraPosition.z-=localSpeed;
+            if (keyController.isPressed('E', false)) cameraPosition.y-=localSpeed;
+            if (keyController.isPressed('Q', false)) cameraPosition.y+=localSpeed;
+            if (keyController.isPressed('A', false)) cameraPosition.x-=localSpeed;
+            if (keyController.isPressed('D', false)) cameraPosition.x+=localSpeed;
 
-            if (keyController.isPressed('w')) cameraPosition.add(forward);
-            if (keyController.isPressed('s')) cameraPosition.sub(forward);
-            if (keyController.isPressed('e')) cameraPosition.add(up);
-            if (keyController.isPressed('q')) cameraPosition.sub(up);
-            if (keyController.isPressed('a')) cameraPosition.add(left);
-            if (keyController.isPressed('d')) cameraPosition.sub(left);
+            if (keyController.isPressed('w', false)) cameraPosition.add(forward);
+            if (keyController.isPressed('s', false)) cameraPosition.sub(forward);
+            if (keyController.isPressed('e', false)) cameraPosition.add(up);
+            if (keyController.isPressed('q', false)) cameraPosition.sub(up);
+            if (keyController.isPressed('a', false)) cameraPosition.add(left);
+            if (keyController.isPressed('d', false)) cameraPosition.sub(left);
 
             cameraPositionFloat[0] = cameraPosition.x;
             cameraPositionFloat[1] = cameraPosition.y;

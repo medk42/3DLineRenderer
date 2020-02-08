@@ -33,10 +33,15 @@ public class KeyController {
      * Returns whether certain key is pressed. In other words whether {@link #keyPressed} has been called and
      * {@link #keyReleased} has not been called since. If supplied with value greater than 255, returns false.
      * @param keyc key to check
+     * @param ignoreCase true to ignore case - for keyc='a' return true if 'a' or 'A' is pressed
      * @return true if {@link #keyPressed} has been called and {@link #keyReleased} has not been called since for keyc
      */
-    public boolean isPressed(char keyc) {
+    public boolean isPressed(char keyc, boolean ignoreCase) {
         if (keyc >= pressedKeys.length) return false;
+        if (ignoreCase) {
+            char other = (Character.toLowerCase(keyc) != keyc)?Character.toLowerCase(keyc):Character.toUpperCase(keyc);
+            return pressedKeys[keyc] || pressedKeys[other];
+        }
         return pressedKeys[keyc];
     }
 
@@ -44,10 +49,15 @@ public class KeyController {
      * Returns whether certain key is toggled. In other words whether the number of {@link #keyReleased} calls for that
      * key is odd. If supplied with value greater than 255, returns false.
      * @param keyc key to check
+     * @param ignoreCase true to ignore case - for keyc='a' return true if only 'a' or 'A' is toggled
      * @return true if the number of {@link #keyReleased} calls for that key is odd
      */
-    public boolean isToggled(char keyc) {
+    public boolean isToggled(char keyc, boolean ignoreCase) {
         if (keyc >= toggledKeys.length) return false;
+        if (ignoreCase) {
+            char other = (Character.toLowerCase(keyc) != keyc)?Character.toLowerCase(keyc):Character.toUpperCase(keyc);
+            return toggledKeys[keyc] ^ toggledKeys[other];
+        }
         return toggledKeys[keyc];
     }
 
