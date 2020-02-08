@@ -135,9 +135,9 @@ class World {
                     if (edge.length >= 3) pApplet.stroke(edge[2]);
                     else pApplet.stroke(255);
                     if (edge.length >= 4) {
-                        pApplet.strokeWeight(Float.intBitsToFloat(edge[3]) / cameraVertices[edge[0]].z);
+                        pApplet.strokeWeight(Float.intBitsToFloat(edge[3]) / cameraVertices[edge[0]].mag());
                     } else pApplet.strokeWeight(1);
-                    pApplet.line(screenVertices[edge[0]].x, screenVertices[edge[0]].y, screenVertices[edge[1]].x, screenVertices[edge[1]].y);
+                    drawLineClipped(screenVertices[edge[0]].x, screenVertices[edge[0]].y, screenVertices[edge[1]].x, screenVertices[edge[1]].y);
                 }
             }
         }
@@ -184,10 +184,10 @@ class World {
                 if (edge.length >= 3) pApplet.stroke(edge[2]);
                 else pApplet.stroke(255);
                 if (edge.length >= 4) {
-                    pApplet.strokeWeight(Float.intBitsToFloat(edge[3]) / cameraVertices[edge[0]].z);
+                    pApplet.strokeWeight(Float.intBitsToFloat(edge[3]) / cameraVertices[edge[0]].mag());
                 }
                 else pApplet.strokeWeight(1);
-                pApplet.line(screenVertices[edge[0]].x, screenVertices[edge[0]].y, screenVertices[edge[1]].x, screenVertices[edge[1]].y);
+                drawLineClipped(screenVertices[edge[0]].x, screenVertices[edge[0]].y, screenVertices[edge[1]].x, screenVertices[edge[1]].y);
             }
         }
     }
@@ -197,5 +197,54 @@ class World {
         float diffY = first[1]-second[1];
         float diffZ = first[2]-second[2];
         return diffX*diffX + diffY*diffY + diffZ*diffZ;
+    }
+
+    private void drawLineClipped(float x0, float y0, float x1, float y1) {
+        boolean p0In = inWindow(x0, y0), p1In = inWindow(x1, y1);
+        if (p0In && p1In) pApplet.line(x0, y0, x1, y1);
+        else {
+            PVector[] intersectionPoints = new PVector[4];
+            int i = 0;
+            int width = pApplet.width, height = pApplet.height;
+            int[][] borders = {{0,0,0,height-1}, {0,0,width-1,0}, {width-1,0,width-1,height-1},{0,height-1,width-1,height-1}};
+            for (int[] border : borders) {
+                PVector intersection = getIntersection(x0,y0,x1,y1,border[0],border[1],border[2],border[3]);
+                if (intersection != null) intersectionPoints[i++] = intersection;
+            }
+
+            if (!p0In && !p1In) {
+                if (intersectionPoints[0] == null || intersectionPoints[1] == null) return;
+                pApplet.line(intersectionPoints[0].x, intersectionPoints[0].y, intersectionPoints[1].x, intersectionPoints[1].y);
+            } else if (!p0In) {
+                if (intersectionPoints[0] == null) return;
+                pApplet.line(intersectionPoints[0].x, intersectionPoints[0].y, x1, y1);
+            } else {
+                if (intersectionPoints[0] == null) return;
+                pApplet.line(x0, y0, intersectionPoints[0].x, intersectionPoints[0].y);
+            }
+        }
+    }
+
+    /**
+     * Get the point of intersection between two lines specified by their endpoints using line-line intersection
+     * (https://en.wikipedia.org/wiki/Line%E2%80%93line_intersection). x1,y1,x2,y2 specify endpoints of the first line,
+     * x3,y3,x4,y4 specify endpoints of the second line
+     * @return point of intersection or null if there isn't one
+     */
+    private PVector getIntersection(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
+        float denominator = (x1-x2)*(y3-y4)-(y1-y2)*(x3-x4);
+
+        if (Math.abs(denominator) < 0.000001) return null;
+
+        float t = ((x1-x3)*(y3-y4)-(y1-y3)*(x3-x4))/denominator;
+        float u = ((y1-y2)*(x1-x3)-(x1-x2)*(y1-y3))/denominator;
+
+        if (t < 0 || t > 1 || u < 0 || u > 1) return null;
+
+        return new PVector(x1+t*(x2-x1), y1+t*(y2-y1));
+    }
+
+    private boolean inWindow(float x, float y) {
+        return (x >= 0 && y >= 0 && x < pApplet.width && y < pApplet.height);
     }
 }

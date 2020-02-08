@@ -4,6 +4,7 @@ import com.jogamp.newt.opengl.GLWindow;
 import eu.medek.linerenderer3d.camera.Camera;
 import eu.medek.linerenderer3d.camera.controllers.RotatingCameraController;
 import eu.medek.linerenderer3d.objects.STLObject;
+import eu.medek.linerenderer3d.objects.examples.Bench;
 import eu.medek.linerenderer3d.objects.examples.NestedLines;
 import eu.medek.linerenderer3d.objects.examples.NestedPyramid;
 import eu.medek.linerenderer3d.objects.examples.RecurTree;
@@ -20,7 +21,7 @@ public class Entry extends PApplet {
     private World world;
     private Camera camera;
     private KeyController keyController = new KeyController(false);
-    private RecurTree tree = new RecurTree(new float[]{0, 0, 2}, new float[]{0,0,0}, new float[]{1,1,1}, true);
+    private RecurTree tree = new RecurTree(new float[]{0, 0, -2}, new float[]{0,0,0}, new float[]{1,1,1}, true);
     private RotatingCameraController cameraController = new RotatingCameraController(new PVector(0,-0.5f,0), 1.5f, -.5f, PERIOD);
     private NestedPyramid nestedPyramid = new NestedPyramid(new float[]{0, 0, 2}, new float[]{0,0,0}, new float[]{.5f,.5f,.5f}, 5, (float)(Math.PI/6));
 
@@ -42,14 +43,14 @@ public class Entry extends PApplet {
         world = new World(this);
         camera = new Camera(new float[]{0,0,0}, new float[]{0,0,0});
 //        world.addObject(new Box(new float[]{0, -0.5f, 0}, new float[]{/*PI/3,PI/5*/0,0,0}, new float[]{1,1,1}));
-        //world.addObject(tree);
-        //world.addObject(new Bench(new float[]{0, 0, 1}, new float[]{0,0,0}, new float[]{1f,1f,1f}));
+        world.addObject(tree);
+        world.addObject(new Bench(new float[]{0, 0, -1}, new float[]{0,0,0}, new float[]{1f,1f,1f}));
         world.addObject(new NestedLines(new float[]{0, 0, 1}, new float[]{0,0,0}, new float[]{1f,1f,1f}, 5));
         world.addObject(nestedPyramid);
         try {
-            //world.addObject(new STLObject(new float[]{2,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\raspberry-pi-holder-top.STL")));
+            world.addObject(new STLObject(new float[]{2,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\raspberry-pi-holder-top.STL")));
             world.addObject(new STLObject(new float[]{0,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\raspberry-pi-holder-bottom.STL")));
-            //world.addObject(new STLObject(new float[]{-2,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\Sphericon.stl")));
+            world.addObject(new STLObject(new float[]{-2,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\Sphericon.stl")));
         } catch (IOException e) {
             e.printStackTrace();
         }
