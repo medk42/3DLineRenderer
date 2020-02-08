@@ -95,7 +95,7 @@ public class STLReader {
         return  (array[3 + offset]<<24)&0xff000000|
                 (array[2 + offset]<<16)&0x00ff0000|
                 (array[1 + offset]<< 8)&0x0000ff00|
-                (array[0 + offset])&0x000000ff;
+                (array[offset])&0x000000ff;
     }
 
     private static float bytesToFloat(byte[] array, int offset) {
