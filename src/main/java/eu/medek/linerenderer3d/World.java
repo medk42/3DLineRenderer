@@ -22,8 +22,8 @@ class World {
 
     //var
     private ArrayList<Object3D> objects = new ArrayList<>();
-    private ArrayList<PVector> vertices = new ArrayList<>();
-    private ArrayList<int[]> edges = new ArrayList<>();
+    private ArrayList<PVector> vertices = null;
+    private ArrayList<int[]> edges = null;
     private PApplet pApplet;
     private float windowWidth = 0, windowHeight = 0;
 
@@ -51,6 +51,8 @@ class World {
     }
 
     private void addObjectToCache(Object3D obj) {
+        if (vertices == null || edges == null) updateCache();
+
         PVector[] objVerticesWorld = obj.calculateWorldVertices();
         int[][] objEdges = obj.getEdgesAll();
 
@@ -67,7 +69,7 @@ class World {
         }
     }
 
-    public void invalidateCache() {
+    public void updateCache() {
         vertices = new ArrayList<>();
         edges = new ArrayList<>();
 
@@ -76,7 +78,14 @@ class World {
         }
     }
 
+    public void invalidateCache() {
+        vertices = null;
+        edges = null;
+    }
+
     public void draw(final Camera camera, boolean debug, int edgeLimit, DrawOrder drawOrder) {
+        if (vertices == null || edges == null) updateCache();
+
         switch (drawOrder) {
             case SORT_OBJECTS: drawObjects(camera, edgeLimit); break;
             case SORT_EDGES: drawEdges(camera, edgeLimit); break;
