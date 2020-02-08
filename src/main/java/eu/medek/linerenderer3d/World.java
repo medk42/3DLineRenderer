@@ -130,7 +130,7 @@ class World {
 
             int[][] edges = obj.getEdgesAll();
             for (int[] edge : edges) {
-                if (edgeLimit-- == 0) break;
+                if (edgeLimit-- == 0) return;
                 if (screenVertices[edge[0]].z >= 0 && screenVertices[edge[1]].z >= 0) {
                     if (edge.length >= 3) pApplet.stroke(edge[2]);
                     else pApplet.stroke(255);
@@ -179,7 +179,7 @@ class World {
         });
 
         for (int[] edge : edges) {
-            if (edgeLimit-- == 0) break;
+            if (edgeLimit-- == 0) return;
             if (screenVertices[edge[0]].z >= 0 && screenVertices[edge[1]].z >= 0) {
                 if (edge.length >= 3) pApplet.stroke(edge[2]);
                 else pApplet.stroke(255);
