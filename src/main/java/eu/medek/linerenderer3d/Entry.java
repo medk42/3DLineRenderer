@@ -9,6 +9,7 @@ import eu.medek.linerenderer3d.objects.examples.NestedLines;
 import eu.medek.linerenderer3d.objects.examples.NestedPyramid;
 import eu.medek.linerenderer3d.objects.examples.RecurTree;
 import eu.medek.linerenderer3d.system.KeyController;
+import eu.medek.linerenderer3d.system.Vector;
 import processing.core.PApplet;
 import processing.core.PVector;
 import java.io.IOException;
@@ -22,7 +23,7 @@ public class Entry extends PApplet {
     private Camera camera;
     private KeyController keyController = new KeyController(false);
     private RecurTree tree = new RecurTree(new float[]{0, 0, -2}, new float[]{0,0,0}, new float[]{1,1,1}, true);
-    private RotatingCameraController cameraController = new RotatingCameraController(new PVector(0,-0.5f,0), 1.5f, -.5f, PERIOD);
+    private RotatingCameraController cameraController = new RotatingCameraController(new Vector(0,-0.5f,0), 1.5f, -.5f, PERIOD);
     private NestedPyramid nestedPyramid = new NestedPyramid(new float[]{0, 0, 2}, new float[]{0,0,0}, new float[]{.5f,.5f,.5f}, 5, (float)(Math.PI/6));
 
     private GLWindow mouseMover = null;
@@ -78,21 +79,21 @@ public class Entry extends PApplet {
     void handleCameraMovement() {
         if (!keyController.isToggled('i', true)) {
             float localSpeed = (keyController.isToggled('l', true)) ? SPEED*3 : SPEED;
-            PVector forward = new PVector(0,0,1);
+            Vector forward = new Vector(0,0,1);
             forward = camera.getTransformedVector(forward);
             forward.mult(localSpeed);
 
-            PVector left = new PVector(-1,0,0);
+            Vector left = new Vector(-1,0,0);
             left = camera.getTransformedVector(left);
             left.mult(localSpeed);
 
-            PVector up = new PVector(0,-1,0);
+            Vector up = new Vector(0,-1,0);
             up = camera.getTransformedVector(up);
             up.mult(localSpeed);
 
             float[] cameraPositionFloat = camera.getPosition();
 
-            PVector cameraPosition = new PVector(cameraPositionFloat[0], cameraPositionFloat[1], cameraPositionFloat[2]);
+            Vector cameraPosition = new Vector(cameraPositionFloat[0], cameraPositionFloat[1], cameraPositionFloat[2]);
 
             if (keyController.isPressed('W', false)) cameraPosition.z+=localSpeed;
             if (keyController.isPressed('S', false)) cameraPosition.z-=localSpeed;

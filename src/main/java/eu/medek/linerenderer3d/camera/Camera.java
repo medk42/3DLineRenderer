@@ -1,7 +1,7 @@
 package eu.medek.linerenderer3d.camera;
 
-import eu.medek.linerenderer3d.math.Matrix3D;
-import processing.core.PVector;
+import eu.medek.linerenderer3d.system.Matrix3D;
+import eu.medek.linerenderer3d.system.Vector;
 
 public class Camera {
     private float[] position;
@@ -23,7 +23,7 @@ public class Camera {
         return Matrix3D.multiply(Matrix3D.getRotateX(-rotation[0]), Matrix3D.getRotateY(-rotation[1]), Matrix3D.getRotateZ(-rotation[2]), Matrix3D.getTranslate(-position[0], -position[1], -position[2]));
     }
 
-    public PVector getTransformedVector(PVector forward) {
+    public Vector getTransformedVector(Vector forward) {
         float[][] rotationMatrix = Matrix3D.multiply(Matrix3D.getRotateZ(rotation[2]), Matrix3D.getRotateY(rotation[1]), Matrix3D.getRotateX(rotation[0]));
         forward = Matrix3D.toPosition(Matrix3D.multiply(rotationMatrix, Matrix3D.toVector(forward)));
 

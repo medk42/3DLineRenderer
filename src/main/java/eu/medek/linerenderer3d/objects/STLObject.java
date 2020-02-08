@@ -1,15 +1,15 @@
 package eu.medek.linerenderer3d.objects;
 
+import eu.medek.linerenderer3d.system.Vector;
 import eu.medek.linerenderer3d.system.stlreader.STLReader;
 import eu.medek.linerenderer3d.system.stlreader.STLTriangle;
 import eu.medek.linerenderer3d.system.stlreader.Vertex;
-import processing.core.PVector;
 
 import java.io.IOException;
 import java.nio.file.Path;
 
 public class STLObject extends Object3D {
-    private final PVector[] vertices;
+    private final Vector[] vertices;
     private final int[][] edges;
 
     public STLObject(float[] position, float[] rotation, float[] scale, Path path) throws IOException {
@@ -18,26 +18,26 @@ public class STLObject extends Object3D {
         STLReader reader = new STLReader(path);
         STLTriangle[] tris = reader.tryRead();
 
-        vertices = new PVector[tris.length*3];
+        vertices = new Vector[tris.length*3];
         edges = new int[tris.length*3][2];
 
         for (int i = 0; i < tris.length; i++) {
-            vertices[3*i] = vertexToPVector(tris[i].getP1());
-            vertices[3*i+1] = vertexToPVector(tris[i].getP2());
-            vertices[3*i+2] = vertexToPVector(tris[i].getP3());
+            vertices[3*i] = vertexToVector(tris[i].getP1());
+            vertices[3*i+1] = vertexToVector(tris[i].getP2());
+            vertices[3*i+2] = vertexToVector(tris[i].getP3());
 
             edges[3*i] = new int[]{3*i, 3*i+1};
             edges[3*i+1] = new int[]{3*i+1, 3*i+2};
             edges[3*i+2] = new int[]{3*i, 3*i+2};
         }
 
-        PVector center = new PVector();
-        for (PVector vertex : vertices) center.add(vertex);
+        Vector center = new Vector();
+        for (Vector vertex : vertices) center.add(vertex);
         center.div(vertices.length);
-        for (PVector vertex : vertices) vertex.sub(center);
+        for (Vector vertex : vertices) vertex.sub(center);
 
-        PVector min = new PVector(), max = new PVector();
-        for (PVector vertex : vertices) {
+        Vector min = new Vector(), max = new Vector();
+        for (Vector vertex : vertices) {
             if (vertex.x < min.x) min.x = vertex.x;
             if (vertex.y < min.y) min.y = vertex.y;
             if (vertex.z < min.z) min.z = vertex.z;
@@ -46,18 +46,18 @@ public class STLObject extends Object3D {
             if (vertex.y > max.y) max.y = vertex.y;
             if (vertex.z > max.z) max.z = vertex.z;
         }
-        PVector delta = PVector.sub(max,min);
+        Vector delta = Vector.sub(max,min);
         float dist = Math.max(delta.x, Math.max(delta.y, delta.z));
-        for (PVector vertex : vertices) vertex.div(dist);
+        for (Vector vertex : vertices) vertex.div(dist);
 
     }
 
-    private PVector vertexToPVector(Vertex v) {
-        return new PVector(v.getX(), v.getY(), v.getZ());
+    private Vector vertexToVector(Vertex v) {
+        return new Vector(v.getX(), v.getY(), v.getZ());
     }
 
     @Override
-    public PVector[] getVertices() {
+    public Vector[] getVertices() {
         return vertices;
     }
 

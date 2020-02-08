@@ -1,20 +1,20 @@
 package eu.medek.linerenderer3d.objects.examples;
 
 import eu.medek.linerenderer3d.objects.Object3D;
-import processing.core.PVector;
+import eu.medek.linerenderer3d.system.Vector;
 
 public class Box extends Object3D {
-    private static final PVector[] vertices = new PVector[8];
+    private static final Vector[] vertices = new Vector[8];
     private final int[][] edges;
     static {
-        vertices[0] = new PVector(-.5f,-.5f,-.5f);
-        vertices[1] = new PVector(-.5f,-.5f,.5f);
-        vertices[2] = new PVector(-.5f,.5f,.5f);
-        vertices[3] = new PVector(-.5f,.5f,-.5f);
-        vertices[4] = new PVector(.5f,.5f,-.5f);
-        vertices[5] = new PVector(.5f,.5f,.5f);
-        vertices[6] = new PVector(.5f,-.5f,.5f);
-        vertices[7] = new PVector(.5f,-.5f,-.5f);
+        vertices[0] = new Vector(-.5f,-.5f,-.5f);
+        vertices[1] = new Vector(-.5f,-.5f,.5f);
+        vertices[2] = new Vector(-.5f,.5f,.5f);
+        vertices[3] = new Vector(-.5f,.5f,-.5f);
+        vertices[4] = new Vector(.5f,.5f,-.5f);
+        vertices[5] = new Vector(.5f,.5f,.5f);
+        vertices[6] = new Vector(.5f,-.5f,.5f);
+        vertices[7] = new Vector(.5f,-.5f,-.5f);
     }
 
     public Box(float[] position, float[] rotation, float[] scale, int color, float lineWidth) {
@@ -29,7 +29,7 @@ public class Box extends Object3D {
     }
 
     @Override
-    public PVector[] getVertices() {
+    public Vector[] getVertices() {
         return vertices;
     }
 

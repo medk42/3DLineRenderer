@@ -2,8 +2,8 @@ package eu.medek.linerenderer3d.system;
 
 /**
  * Class for containing information about pressed or toggled keys. Object gets information using
- * {@link #keyPressed(char)} and {@link #keyReleased(char)} methods and provides {@link #isPressed(char)} and
- * {@link #isToggled(char)} methods. Supports keys 0-255.
+ * {@link #keyPressed} and {@link #keyReleased} methods and provides {@link #isPressed} and
+ * {@link #isToggled} methods. Supports keys 0-255.
  */
 public class KeyController {
     /**

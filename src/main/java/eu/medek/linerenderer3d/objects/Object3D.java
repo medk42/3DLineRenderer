@@ -1,8 +1,8 @@
 package eu.medek.linerenderer3d.objects;
 
-import eu.medek.linerenderer3d.math.Matrix3D;
+import eu.medek.linerenderer3d.system.Matrix3D;
 import eu.medek.linerenderer3d.system.Pair;
-import processing.core.PVector;
+import eu.medek.linerenderer3d.system.Vector;
 
 import java.util.ArrayList;
 
@@ -33,7 +33,7 @@ public abstract class Object3D {
      * Precalculated world vertices of this object. If object doesn't move between frames, there is no need to
      * recalculate world vertices.
      */
-    private PVector[] precalculatedVertices = null;
+    private Vector[] precalculatedVertices = null;
 
     /**
      * Edges of this object and all nested objects. Will be calculated during the first call to {@link #getEdgesAll}
@@ -64,7 +64,7 @@ public abstract class Object3D {
      * Getter for this object's local vertices (not including nested objects!). This method always has to return same values!
      * @return local vertices of this object
      */
-    public abstract PVector[] getVertices();
+    public abstract Vector[] getVertices();
 
     /**
      * Getter for this object's edges (not including nested objects!). This method always has to return same values!
@@ -177,12 +177,12 @@ public abstract class Object3D {
      * </ul>
      * @return world vertices of this object and all its nested objects
      */
-    public PVector[] calculateWorldVertices() {
+    public Vector[] calculateWorldVertices() {
         if (precalculatedVertices == null) {
-            ArrayList<Pair<PVector[], float[][]>> allVertices = getVerticesWorldTransform();
+            ArrayList<Pair<Vector[], float[][]>> allVertices = getVerticesWorldTransform();
             int verticesCount = 0;
             for (var pair : allVertices) verticesCount += pair.getFirst().length;
-            precalculatedVertices = new PVector[verticesCount];
+            precalculatedVertices = new Vector[verticesCount];
 
             int id = 0;
             for (var pair : allVertices)
@@ -267,9 +267,9 @@ public abstract class Object3D {
      * matrices.
      * @return list of pairs, each containing a list of vertices and corresponding local-to-world transformation matrix
      */
-    private ArrayList<Pair<PVector[], float[][]>> getVerticesWorldTransform() {
+    private ArrayList<Pair<Vector[], float[][]>> getVerticesWorldTransform() {
         Object3D[] nested = getNested();
-        ArrayList<Pair<PVector[], float[][]>> result = new ArrayList<>();
+        ArrayList<Pair<Vector[], float[][]>> result = new ArrayList<>();
 
         for (var child : nested) result.addAll(child.getVerticesWorldTransform());
 

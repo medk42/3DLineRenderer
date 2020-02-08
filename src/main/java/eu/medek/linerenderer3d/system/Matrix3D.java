@@ -1,7 +1,4 @@
-package eu.medek.linerenderer3d.math;
-
-import processing.core.PApplet;
-import processing.core.PVector;
+package eu.medek.linerenderer3d.system;
 
 /**
   First value: row
@@ -13,15 +10,15 @@ public class Matrix3D {
     }
 
     public static float[][] getRotateX(float angle) {
-        return new float[][] {{1,0,0,0}, {0, PApplet.cos(angle),-PApplet.sin(angle),0}, {0,PApplet.sin(angle),PApplet.cos(angle),0}, {0,0,0,1}};
+        return new float[][] {{1,0,0,0}, {0, (float)Math.cos(angle),-(float)Math.sin(angle),0}, {0,(float)Math.sin(angle),(float)Math.cos(angle),0}, {0,0,0,1}};
     }
 
     public static float[][] getRotateY(float angle) {
-        return new float[][] {{PApplet.cos(angle),0,PApplet.sin(angle),0}, {0,1,0,0}, {-PApplet.sin(angle),0,PApplet.cos(angle),0}, {0,0,0,1}};
+        return new float[][] {{(float)Math.cos(angle),0,(float)Math.sin(angle),0}, {0,1,0,0}, {-(float)Math.sin(angle),0,(float)Math.cos(angle),0}, {0,0,0,1}};
     }
 
     public static float[][] getRotateZ(float angle) {
-        return new float[][] {{PApplet.cos(angle),-PApplet.sin(angle),0,0}, {PApplet.sin(angle),PApplet.cos(angle),0,0}, {0,0,1,0}, {0,0,0,1}};
+        return new float[][] {{(float)Math.cos(angle),-(float)Math.sin(angle),0,0}, {(float)Math.sin(angle),(float)Math.cos(angle),0,0}, {0,0,1,0}, {0,0,0,1}};
     }
 
     public static float[][] getScale(float sx, float sy, float sz) {
@@ -55,11 +52,11 @@ public class Matrix3D {
         return result;
     }
 
-    public static float[] toVector(PVector position) {
+    public static float[] toVector(Vector position) {
         return new float[]{position.x, position.y, position.z, 1};
     }
 
-    public static PVector toPosition(float[] vector) {
-        return new PVector(vector[0]/vector[3], vector[1]/vector[3], vector[2]/vector[3]);
+    public static Vector toPosition(float[] vector) {
+        return new Vector(vector[0]/vector[3], vector[1]/vector[3], vector[2]/vector[3]);
     }
 }

@@ -1,10 +1,10 @@
 package eu.medek.linerenderer3d;
 
 import eu.medek.linerenderer3d.camera.Camera;
-import eu.medek.linerenderer3d.math.Matrix3D;
+import eu.medek.linerenderer3d.system.Matrix3D;
 import eu.medek.linerenderer3d.objects.Object3D;
+import eu.medek.linerenderer3d.system.Vector;
 import processing.core.PApplet;
-import processing.core.PVector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,7 +22,7 @@ class World {
 
     //var
     private ArrayList<Object3D> objects = new ArrayList<>();
-    private ArrayList<PVector> vertices = null;
+    private ArrayList<Vector> vertices = null;
     private ArrayList<int[]> edges = null;
     private PApplet pApplet;
     private float windowWidth = 0, windowHeight = 0;
@@ -53,7 +53,7 @@ class World {
     private void addObjectToCache(Object3D obj) {
         if (vertices == null || edges == null) updateCache();
 
-        PVector[] objVerticesWorld = obj.calculateWorldVertices();
+        Vector[] objVerticesWorld = obj.calculateWorldVertices();
         int[][] objEdges = obj.getEdgesAll();
 
         int deltaVertices = vertices.size();
@@ -113,18 +113,18 @@ class World {
         });
 
         for (Object3D obj : objects) {
-            PVector[] worldVertices = obj.calculateWorldVertices();
-            PVector[] cameraVertices = new PVector[worldVertices.length];
+            Vector[] worldVertices = obj.calculateWorldVertices();
+            Vector[] cameraVertices = new Vector[worldVertices.length];
             for (int i = 0; i < worldVertices.length; i++)
                 cameraVertices[i] = Matrix3D.toPosition(Matrix3D.multiply(toCameraMatrix, Matrix3D.toVector(worldVertices[i])));
-            PVector[] perspectiveVertices = new PVector[cameraVertices.length];
+            Vector[] perspectiveVertices = new Vector[cameraVertices.length];
             for (int i = 0; i < cameraVertices.length; i++) {
                 if (cameraVertices[i].z >= 0)
                     perspectiveVertices[i] = Matrix3D.toPosition(Matrix3D.multiply(toPerspectiveMatrix, Matrix3D.toVector(cameraVertices[i])));
                 else
                     perspectiveVertices[i] = Matrix3D.toPosition(Matrix3D.multiply(toPerspectiveNegativeMatrix, Matrix3D.toVector(cameraVertices[i])));
             }
-            PVector[] screenVertices = new PVector[perspectiveVertices.length];
+            Vector[] screenVertices = new Vector[perspectiveVertices.length];
             for (int i = 0; i < perspectiveVertices.length; i++)
                 screenVertices[i] = Matrix3D.toPosition(Matrix3D.multiply(toScreenMatrix, Matrix3D.toVector(perspectiveVertices[i])));
 
@@ -148,11 +148,11 @@ class World {
 
         float[][] toCameraMatrix = camera.calculateToCameraMatrix();
 
-        PVector[] cameraVertices = new PVector[vertices.size()];
+        Vector[] cameraVertices = new Vector[vertices.size()];
         for (int i = 0; i < vertices.size(); i++)
             cameraVertices[i] = Matrix3D.toPosition(Matrix3D.multiply(toCameraMatrix, Matrix3D.toVector(vertices.get(i))));
 
-        PVector[] perspectiveVertices = new PVector[cameraVertices.length];
+        Vector[] perspectiveVertices = new Vector[cameraVertices.length];
         for (int i = 0; i < cameraVertices.length; i++) {
             if (cameraVertices[i].z >= 0)
                 perspectiveVertices[i] = Matrix3D.toPosition(Matrix3D.multiply(toPerspectiveMatrix, Matrix3D.toVector(cameraVertices[i])));
@@ -160,7 +160,7 @@ class World {
                 perspectiveVertices[i] = Matrix3D.toPosition(Matrix3D.multiply(toPerspectiveNegativeMatrix, Matrix3D.toVector(cameraVertices[i])));
         }
 
-        PVector[] screenVertices = new PVector[perspectiveVertices.length];
+        Vector[] screenVertices = new Vector[perspectiveVertices.length];
         for (int i = 0; i < perspectiveVertices.length; i++)
             screenVertices[i] = Matrix3D.toPosition(Matrix3D.multiply(toScreenMatrix, Matrix3D.toVector(perspectiveVertices[i])));
 
@@ -203,12 +203,12 @@ class World {
         boolean p0In = inWindow(x0, y0), p1In = inWindow(x1, y1);
         if (p0In && p1In) pApplet.line(x0, y0, x1, y1);
         else {
-            PVector[] intersectionPoints = new PVector[4];
+            Vector[] intersectionPoints = new Vector[4];
             int i = 0;
             int width = pApplet.width, height = pApplet.height;
             int[][] borders = {{0,0,0,height-1}, {0,0,width-1,0}, {width-1,0,width-1,height-1},{0,height-1,width-1,height-1}};
             for (int[] border : borders) {
-                PVector intersection = getIntersection(x0,y0,x1,y1,border[0],border[1],border[2],border[3]);
+                Vector intersection = getIntersection(x0,y0,x1,y1,border[0],border[1],border[2],border[3]);
                 if (intersection != null) intersectionPoints[i++] = intersection;
             }
 
@@ -231,7 +231,7 @@ class World {
      * x3,y3,x4,y4 specify endpoints of the second line
      * @return point of intersection or null if there isn't one
      */
-    private PVector getIntersection(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
+    private Vector getIntersection(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
         float denominator = (x1-x2)*(y3-y4)-(y1-y2)*(x3-x4);
 
         if (Math.abs(denominator) < 0.000001) return null;
@@ -241,7 +241,7 @@ class World {
 
         if (t < 0 || t > 1 || u < 0 || u > 1) return null;
 
-        return new PVector(x1+t*(x2-x1), y1+t*(y2-y1));
+        return new Vector(x1+t*(x2-x1), y1+t*(y2-y1));
     }
 
     private boolean inWindow(float x, float y) {

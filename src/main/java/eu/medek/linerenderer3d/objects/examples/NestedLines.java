@@ -1,13 +1,13 @@
 package eu.medek.linerenderer3d.objects.examples;
 
 import eu.medek.linerenderer3d.objects.Object3D;
-import processing.core.PVector;
+import eu.medek.linerenderer3d.system.Vector;
 
 public class NestedLines extends Object3D {
 
-    private static PVector[] vertices = new PVector[] {
-            new PVector(.5f, 0, 0),
-            new PVector(-.5f, 0, 0)
+    private static Vector[] vertices = new Vector[] {
+            new Vector(.5f, 0, 0),
+            new Vector(-.5f, 0, 0)
     };
 
     private static int[][] edges = new int[][]{{0,1}};
@@ -25,7 +25,7 @@ public class NestedLines extends Object3D {
     }
 
     @Override
-    public PVector[] getVertices() {
+    public Vector[] getVertices() {
         return vertices;
     }
 
