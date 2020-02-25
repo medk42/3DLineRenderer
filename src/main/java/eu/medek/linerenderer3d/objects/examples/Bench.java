@@ -4,6 +4,9 @@ import eu.medek.linerenderer3d.objects.Object3D;
 import eu.medek.linerenderer3d.system.Color;
 import eu.medek.linerenderer3d.system.Vector;
 
+/**
+ * Example implementation of Object3D class creating a bench.
+ */
 public class Bench extends Object3D {
     private static final int LEGS_COLOR = Color.fromRGB(0x38, 0x38, 0x38);
     private static final int PLANKS_COLOR = Color.fromRGB(0x33, 0x2c, 0x2b);
@@ -40,20 +43,32 @@ public class Bench extends Object3D {
         for (int i = 0; i < legPart.length; i++) edges[15*4 + 15 + i] = new int[]{i + 15*2, i + 15*3, LEGS_COLOR, Float.floatToIntBits(LINE_WIDTH)};
     }
 
+    /**
+     * @see Object3D#Object3D(float[], float[], float[])
+     */
     public Bench(float[] position, float[] rotation, float[] scale) {
         super(position, rotation, scale);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Vector[] getVertices() {
         return vertices;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int[][] getEdges() {
         return edges;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Object3D[] getNestedAbstract() {
         return planks;

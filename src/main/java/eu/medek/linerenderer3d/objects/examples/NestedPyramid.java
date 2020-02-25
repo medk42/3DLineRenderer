@@ -3,6 +3,9 @@ package eu.medek.linerenderer3d.objects.examples;
 import eu.medek.linerenderer3d.objects.Object3D;
 import eu.medek.linerenderer3d.system.Vector;
 
+/**
+ * More advanced example implementation of Object3D class with recursive nested objects.
+ */
 public class NestedPyramid extends Object3D {
     private static Vector[] vertices = new Vector[] {
             new Vector(.5f,0,.5f),
@@ -16,18 +19,30 @@ public class NestedPyramid extends Object3D {
 
     private NestedPyramid[] children;
 
-    public NestedPyramid(float[] position, float[] rotation, float[] scale, int recursion, float recursionAngle) {
+    /**
+     * Creates 4 children if recursionDepth > 0.
+     * @param recursionDepth number of levels of lines
+     * @param recursionAngle angle at which the children pyramids are rotated away from center (0 means same rotation as
+     *                       parent due to them being nested objects)
+     * @see Object3D#Object3D(float[], float[], float[])
+     */
+    public NestedPyramid(float[] position, float[] rotation, float[] scale, int recursionDepth, float recursionAngle) {
         super(position, rotation, scale);
-        if (recursion > 0) {
+        if (recursionDepth > 0) {
             children = new NestedPyramid[]{
-                new NestedPyramid(new float[]{.5f, -1, .5f}, new float[]{-recursionAngle, 0, recursionAngle}, new float[]{.5f, .5f, .5f}, recursion - 1, recursionAngle),
-                new NestedPyramid(new float[]{-.5f, -1, .5f}, new float[]{-recursionAngle, 0, -recursionAngle}, new float[]{.5f, .5f, .5f}, recursion - 1, recursionAngle),
-                new NestedPyramid(new float[]{-.5f, -1, -.5f}, new float[]{recursionAngle, 0, -recursionAngle}, new float[]{.5f, .5f, .5f}, recursion - 1, recursionAngle),
-                new NestedPyramid(new float[]{.5f, -1, -.5f}, new float[]{recursionAngle, 0, recursionAngle}, new float[]{.5f, .5f, .5f}, recursion - 1, recursionAngle)
+                new NestedPyramid(new float[]{.5f, -1, .5f}, new float[]{-recursionAngle, 0, recursionAngle}, new float[]{.5f, .5f, .5f}, recursionDepth - 1, recursionAngle),
+                new NestedPyramid(new float[]{-.5f, -1, .5f}, new float[]{-recursionAngle, 0, -recursionAngle}, new float[]{.5f, .5f, .5f}, recursionDepth - 1, recursionAngle),
+                new NestedPyramid(new float[]{-.5f, -1, -.5f}, new float[]{recursionAngle, 0, -recursionAngle}, new float[]{.5f, .5f, .5f}, recursionDepth - 1, recursionAngle),
+                new NestedPyramid(new float[]{.5f, -1, -.5f}, new float[]{recursionAngle, 0, recursionAngle}, new float[]{.5f, .5f, .5f}, recursionDepth - 1, recursionAngle)
             };
         } else children = new NestedPyramid[0];
     }
 
+    /**
+     * Update the recursion angle.
+     * @param newRecursionAngle angle at which the children pyramids are rotated away from center (0 means same rotation
+     *                          as parent due to them being nested objects)
+     */
     public void updateRecursionAngle(float newRecursionAngle) {
         if (children.length == 0) return;
 
@@ -49,16 +64,25 @@ public class NestedPyramid extends Object3D {
         children[3].updateRecursionAngle(newRecursionAngle);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Vector[] getVertices() {
         return vertices;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int[][] getEdges() {
         return edges;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Object3D[] getNestedAbstract() {
         return children;
