@@ -4,10 +4,7 @@ import com.jogamp.newt.opengl.GLWindow;
 import eu.medek.linerenderer3d.camera.Camera;
 import eu.medek.linerenderer3d.camera.controllers.RotatingCameraController;
 import eu.medek.linerenderer3d.objects.STLObject;
-import eu.medek.linerenderer3d.objects.examples.Bench;
-import eu.medek.linerenderer3d.objects.examples.NestedLines;
-import eu.medek.linerenderer3d.objects.examples.NestedPyramid;
-import eu.medek.linerenderer3d.objects.examples.RecurTree;
+import eu.medek.linerenderer3d.objects.examples.*;
 import eu.medek.linerenderer3d.system.KeyController;
 import eu.medek.linerenderer3d.system.Vector;
 import processing.core.PApplet;
@@ -69,15 +66,16 @@ public class Entry extends PApplet {
         });
 
         camera = new Camera(new float[]{0,0,0}, new float[]{0,0,0});
-//        world.addObject(new Box(new float[]{0, -0.5f, 0}, new float[]{/*PI/3,PI/5*/0,0,0}, new float[]{1,1,1}));
+        world.addObject(new Box(new float[]{0, -0.5f, 0}, new float[]{0,0,0}, new float[]{1,1,1}));
         world.addObject(tree);
         world.addObject(new Bench(new float[]{0, 0, -1}, new float[]{0,0,0}, new float[]{1f,1f,1f}));
         world.addObject(new NestedLines(new float[]{0, 0, 1}, new float[]{0,0,0}, new float[]{1f,1f,1f}, 5));
         world.addObject(nestedPyramid);
         try {
-            world.addObject(new STLObject(new float[]{2,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\raspberry-pi-holder-top.STL")));
-            world.addObject(new STLObject(new float[]{0,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\raspberry-pi-holder-bottom.STL")));
-            world.addObject(new STLObject(new float[]{-2,0,0}, new float[]{0,0,0}, new float[]{1,1,1}, Path.of("C:\\Users\\medek\\Downloads\\temp\\3d\\Sphericon.stl")));
+            world.addObject(new STLObject(new float[]{-2,-0.5f,0}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Path.of("STLExamples", "Globe.stl"), true));
+            world.addObject(new STLObject(new float[]{0,-0.5f,0}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Path.of("STLExamples", "Tower.stl"), true));
+            world.addObject(new STLObject(new float[]{2,0,-0.25f}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Path.of("STLExamples", "NameTagIn.stl"), true));
+            world.addObject(new STLObject(new float[]{2,0,0.25f}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Path.of("STLExamples", "NameTagOut.stl"), true));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -156,10 +154,7 @@ public class Entry extends PApplet {
             cameraPositionFloat[2] = cameraPosition.z;
 
 
-            if (!mouseLock) {
-                camera.getRotation()[1] = mouseX*TWO_PI/width-PI;
-                camera.getRotation()[0] = -mouseY*TWO_PI/height+PI;
-            } else {
+            if (mouseLock) {
                 PVector mouseDelta = PVector.sub(new PVector(mouseX, mouseY), offset);
                 camera.getRotation()[1] += mouseDelta.x * TWO_PI / width;
                 camera.getRotation()[0] += -mouseDelta.y * TWO_PI / height;

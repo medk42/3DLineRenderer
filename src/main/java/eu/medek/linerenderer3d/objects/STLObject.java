@@ -12,7 +12,7 @@ public class STLObject extends Object3D {
     private final Vector[] vertices;
     private final int[][] edges;
 
-    public STLObject(float[] position, float[] rotation, float[] scale, Path path) throws IOException {
+    public STLObject(float[] position, float[] rotation, float[] scale, Path path, boolean normalize) throws IOException {
         super(position, rotation, scale);
 
         STLReader reader = new STLReader(path);
@@ -31,25 +31,26 @@ public class STLObject extends Object3D {
             edges[3*i+2] = new int[]{3*i, 3*i+2};
         }
 
-        Vector center = new Vector();
-        for (Vector vertex : vertices) center.add(vertex);
-        center.div(vertices.length);
-        for (Vector vertex : vertices) vertex.sub(center);
+        if (normalize) {
+            Vector min = new Vector(), max = new Vector();
+            for (Vector vertex : vertices) {
+                if (vertex.x < min.x) min.x = vertex.x;
+                if (vertex.y < min.y) min.y = vertex.y;
+                if (vertex.z < min.z) min.z = vertex.z;
 
-        Vector min = new Vector(), max = new Vector();
-        for (Vector vertex : vertices) {
-            if (vertex.x < min.x) min.x = vertex.x;
-            if (vertex.y < min.y) min.y = vertex.y;
-            if (vertex.z < min.z) min.z = vertex.z;
+                if (vertex.x > max.x) max.x = vertex.x;
+                if (vertex.y > max.y) max.y = vertex.y;
+                if (vertex.z > max.z) max.z = vertex.z;
+            }
 
-            if (vertex.x > max.x) max.x = vertex.x;
-            if (vertex.y > max.y) max.y = vertex.y;
-            if (vertex.z > max.z) max.z = vertex.z;
+            Vector delta = Vector.sub(max, min);
+            Vector center = new Vector(delta).mult(0.5f).add(min);
+            float dist = Math.max(delta.x, Math.max(delta.y, delta.z));
+            for (Vector vertex : vertices) {
+                vertex.sub(center);
+                vertex.div(dist);
+            }
         }
-        Vector delta = Vector.sub(max,min);
-        float dist = Math.max(delta.x, Math.max(delta.y, delta.z));
-        for (Vector vertex : vertices) vertex.div(dist);
-
     }
 
     private Vector vertexToVector(Vertex v) {
