@@ -8,8 +8,17 @@ import eu.medek.linerenderer3d.system.Vector;
  * Example implementation of Object3D class creating a bench.
  */
 public class Bench extends Object3D {
+    /**
+     * Color of the legs of the bench.
+     */
     private static final int LEGS_COLOR = Color.fromRGB(0x38, 0x38, 0x38);
+    /**
+     * Color of the planks on the bench.
+     */
     private static final int PLANKS_COLOR = Color.fromRGB(0x33, 0x2c, 0x2b);
+    /**
+     * Width of the edges of the bench.
+     */
     private static final float LINE_WIDTH = 5f;
 
     private static final Box[] planks = new Box[]{
