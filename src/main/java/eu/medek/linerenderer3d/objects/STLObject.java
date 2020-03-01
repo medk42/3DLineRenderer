@@ -8,10 +8,21 @@ import eu.medek.linerenderer3d.system.stlreader.Vertex;
 import java.io.IOException;
 import java.nio.file.Path;
 
+/**
+ * Implementation of Object3D class able to display an STL file (both binary and text).
+ */
 public class STLObject extends Object3D {
     private final Vector[] vertices;
     private final int[][] edges;
 
+    /**
+     * Constructor for also setting path to the STL file and with an option to normalize vertices.
+     * @param path path to the STL file; there are no checks, has to be valid, otherwise IOException gets thrown
+     * @param normalize option to normalize the vertices of the loaded object to be in a cube of size 1 with its center
+     *                  at 0
+     * @throws IOException if any error arises while reading the file
+     * @see Object3D#Object3D(float[], float[], float[])
+     */
     public STLObject(float[] position, float[] rotation, float[] scale, Path path, boolean normalize) throws IOException {
         super(position, rotation, scale);
 
@@ -53,20 +64,34 @@ public class STLObject extends Object3D {
         }
     }
 
+    /**
+     * Transform STL object Vertex representing vertex into Vector class.
+     * @param v Vertex object to copy from
+     * @return new Vector object containing the same data as the Vertex object
+     */
     private Vector vertexToVector(Vertex v) {
         return new Vector(v.getX(), v.getY(), v.getZ());
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public Vector[] getVertices() {
         return vertices;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int[][] getEdges() {
         return edges;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     protected Object3D[] getNestedAbstract() {
         return new Object3D[0];
