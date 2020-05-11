@@ -48,8 +48,20 @@ public class RecurTree extends Object3D {
      */
     private static final int BOTTOM_COLOR = Color.fromRGB(0x29, 0x24, 0x23);
 
+    /**
+     * Vertices of the recursive tree.
+     */
     private Vector[] vertices = null;
+
+    /**
+     * Edges of the recursive tree.
+     */
     private int[][] edges = null;
+
+    /**
+     * Toggle for deciding whether there should be debug information printed while creating the tree (main use is to see
+     * if the recursion is taking too long because of possibly incorrectly set parameters above).
+     */
     private boolean debugLogging;
 
     /**
@@ -85,12 +97,19 @@ public class RecurTree extends Object3D {
         if (debugLogging) System.out.println("done");
     }
 
+    /**
+     * Variable for correctly naming vertices/pairs of vertices(=edges)
+     */
     private int actIndex;
 
     /**
      * Function to recursively create a random tree with initial angle, branch weight, branch length and position
-     * (passed in verticesTemp Vector list). This function creates a branch and then recursively calls itself to create
-     * two child branches originating at its end.
+     * (position is passed in verticesTemp Vector list).
+     * <br>
+     * This function creates a branch and then recursively calls itself to create two child branches originating at
+     * its end.
+     * <br>
+     * Both "fromID" parameter and "actIndex" variable need to be set to 0 before calling the function from others.
      * @param fromID index of parent vertex in verticesTemp list
      * @param angleX x coordinate of branch angle (radians)
      * @param angleY y coordinate of branch angle (radians)

@@ -8,13 +8,22 @@ import eu.medek.linerenderer3d.system.Vector;
  */
 public class NestedLines extends Object3D {
 
+    /**
+     * Vertices of the NestedLines object.
+     */
     private static Vector[] vertices = new Vector[] {
             new Vector(.5f, 0, 0),
             new Vector(-.5f, 0, 0)
     };
 
+    /**
+     * Edges of the NestedLines object.
+     */
     private static int[][] edges = new int[][]{{0,1}};
 
+    /**
+     * "Nested" objects of the NestedLines object - other NestedLines objects (NestedLines is a recursive 3D object).
+     */
     private NestedLines[] children;
 
     /**

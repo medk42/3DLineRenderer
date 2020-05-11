@@ -21,15 +21,26 @@ public class Bench extends Object3D {
      */
     private static final float LINE_WIDTH = 5f;
 
+    /**
+     * "Nested" objects that are representing the planks of the bench.
+     */
     private static final Box[] planks = new Box[]{
             new Box(new float[]{0, -.24f, -.16f}, new float[]{0,0,0}, new float[]{1,.04f,.13f}, PLANKS_COLOR, LINE_WIDTH),
             new Box(new float[]{0, -.24f, 0f}, new float[]{0,0,0}, new float[]{1,.04f,.13f}, PLANKS_COLOR, LINE_WIDTH),
             new Box(new float[]{0, -.24f, .16f}, new float[]{0,0,0}, new float[]{1,.04f,.13f}, PLANKS_COLOR, LINE_WIDTH)
     };
 
+    /**
+     * Vertices of the legs of the bench.
+     */
     private static final Vector[] vertices;
+
+    /**
+     * Edges of the legs of the bench.
+     */
     private static final int[][] edges;
 
+    // Creating all the vertices and edges of the legs of the bench.
     static {
         vertices = new Vector[15*4];
         Vector[] legPart = new Vector[] {new Vector(0,-.22f,.16f+.13f/4), new Vector(0,-.165f,.105f+.13f/4), new Vector(0,-.11f,.105f+.13f/4), new Vector(0,-.055f,.16f+.13f/4), new Vector(0,0,.22f), new Vector(0,0,.10f), new Vector(0,-0.055f,.045f), new Vector(0,-0.07f,0), new Vector(0,-0.055f,-.045f), new Vector(0,0,-.10f), new Vector(0,0,-.22f), new Vector(0,-.055f,-.16f-.13f/4), new Vector(0,-.11f,-.105f-.13f/4), new Vector(0,-.165f,-.105f-.13f/4), new Vector(0,-.22f,-.16f-.13f/4)};

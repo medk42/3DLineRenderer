@@ -7,6 +7,9 @@ import eu.medek.linerenderer3d.system.Vector;
  * More advanced example implementation of Object3D class with recursive nested objects.
  */
 public class NestedPyramid extends Object3D {
+    /**
+     * Vertices of the NestedPyramid object.
+     */
     private static Vector[] vertices = new Vector[] {
             new Vector(.5f,0,.5f),
             new Vector(-.5f,0,.5f),
@@ -15,8 +18,15 @@ public class NestedPyramid extends Object3D {
             new Vector(0f,-1f,0f)
     };
 
+    /**
+     * Edges of the NestedPyramid object.
+     */
     private static int[][] edges = new int[][] {{0,1},{1,2},{2,3},{3,0},{0,4},{1,4},{2,4},{3,4}};
 
+    /**
+     * "Nested" objects of the NestedPyramid object - other NestedPyramid objects (NestedPyramid is a recursive
+     *  3D object).
+     */
     private NestedPyramid[] children;
 
     /**

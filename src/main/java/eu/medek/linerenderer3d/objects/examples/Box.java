@@ -7,8 +7,18 @@ import eu.medek.linerenderer3d.system.Vector;
  * Implementation of Object3D class creating a simple box of size 1 centered around (0,0,0).
  */
 public class Box extends Object3D {
+    /**
+     * Vertices of the box.
+     */
     private static final Vector[] vertices = new Vector[8];
+
+    /**
+     * Edges of the box.
+     */
     private final int[][] edges;
+
+    // Creating the vertices of the box in a clearer way (mainly so that creating edges is clear - those are created
+    // in constructors, because their data depends on whether or not the box should have a color).
     static {
         vertices[0] = new Vector(-.5f,-.5f,-.5f);
         vertices[1] = new Vector(-.5f,-.5f,.5f);
