@@ -9,37 +9,99 @@ import eu.medek.linerenderer3d.system.Vector;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+/**
+ * Class for representing and rendering the current 3D scene.
+ */
 class World {
 
+    /**
+     * Order in which to draw edges.
+     */
     public enum DrawOrder {
-        SORT_EDGES, SORT_OBJECTS
+        /**
+         * Sort the edges by the distance of their midpoint from camera. Then draw the furthest first. This is slow, but
+         * better looking.
+         */
+        SORT_EDGES,
+        /**
+         * Sort the objects by their distance from camera. Then draw the furthest first with edges in any order. This is
+         * fast, but doesn't look as good.
+         */
+        SORT_OBJECTS
     }
 
     //const
+    /**
+     * "d" parameter for converting to perspective space.
+     */
     private static final float d = 1;
+
+    /**
+     * Matrix for converting from camera space to perspective space.
+     */
     private static final float[][] toPerspectiveMatrix = new float[][] {{1,0,0,0}, {0,1,0,0}, {0,0,1,0}, {0,0,1/d,0}};
+
+    /**
+     * Matrix for converting from camera space to perspective space. Needed to correctly (not) display objects/edges
+     * behind the camera.
+     */
     private static final float[][] toPerspectiveNegativeMatrix = new float[][] {{1,0,0,0}, {0,1,0,0}, {0,0,1,0}, {0,0,-1/d,0}};
 
     //var
+    /**
+     * List of 3D objects to render.
+     */
     private ArrayList<Object3D> objects = new ArrayList<>();
+
+    /**
+     * Cached list of vertices used to draw in DrawOrder.SORT_EDGES.
+     */
     private ArrayList<Vector> vertices = null;
+
+    /**
+     * Cached list of edges used to draw in DrawOrder.SORT_EDGES. Cache is useful, otherwise we would need to copy edges
+     * and vertices from each object each frame and update edges with new positions of their vertices.
+     */
     private ArrayList<int[]> edges = null;
+
+    /**
+     * Renderer used to render the scene.
+     */
     private Renderer renderer;
+
+    /**
+     * Cached values for output's width/height. They are automatically updated every frame if necessary.
+     */
     private int windowWidth = 0, windowHeight = 0;
 
+    /**
+     * Matrix for converting from perspective space to window space.
+     */
     private float[][] toScreenMatrix;
 
+    /**
+     * Constructor for the World object.
+     * @param renderer renderer to use to render the scene
+     */
     public World(Renderer renderer) {
         this.renderer = renderer;
         setToScreenMatrix();
     }
 
 
+    /**
+     * Add {@link Object3D 3D object} to the scene.
+     * @param obj the {@link Object3D 3D object} to be added
+     */
     public void addObject(Object3D obj) {
         objects.add(obj);
         addObjectToCache(obj);
     }
 
+    /**
+     * Correctly set the toScreen matrix when the output and cached resolution (and by extention the resolution used for
+     * the toScreen matrix)  don't match.
+     */
     private void setToScreenMatrix() {
         if (renderer.getWidth() != windowWidth || renderer.getHeight() != windowHeight) {
             windowWidth = renderer.getWidth();
@@ -50,6 +112,10 @@ class World {
         }
     }
 
+    /**
+     * Cache object's vertices and edges by adding them to {@link World#vertices} and {@link World#edges}.
+     * @param obj the {@link Object3D 3D object} to be cached
+     */
     private void addObjectToCache(Object3D obj) {
         if (vertices == null || edges == null) updateCache();
 
@@ -69,7 +135,10 @@ class World {
         }
     }
 
-    public void updateCache() {
+    /**
+     * Discard and rebuild {@link World#vertices} and {@link World#edges} caches.
+     */
+    private void updateCache() {
         vertices = new ArrayList<>();
         edges = new ArrayList<>();
 
@@ -78,15 +147,25 @@ class World {
         }
     }
 
+    /**
+     * Invalidate (discard) {@link World#vertices} and {@link World#edges} caches. Function doesn't rebuild the cache,
+     * because cache might be invalidated multiple times per frame.
+     */
     public void invalidateCache() {
         vertices = null;
         edges = null;
     }
 
+    /**
+     * @return the number of vertices in the scene
+     */
     public int getVertexCount() {
         return vertices.size();
     }
 
+    /**
+     * @return the number of edges in the scene
+     */
     public int getEdgeCount() {
         return edges.size();
     }
@@ -189,6 +268,13 @@ class World {
         }
     }
 
+    /**
+     * Returns distance between two points squared, for performance reasons - can be used in cases when there is no
+     * reason to take the square root of the result. For example when sorting points by distances.
+     * @param first point in 3D space (float array with length 3)
+     * @param second point in 3D space (float array with length 3)
+     * @return distance between the two points squared
+     */
     private float distSq(float[] first, float[] second) {
         float diffX = first[0]-second[0];
         float diffY = first[1]-second[1];
@@ -241,6 +327,11 @@ class World {
         return new Vector(x1+t*(x2-x1), y1+t*(y2-y1));
     }
 
+    /**
+     * @param x x coordinate
+     * @param y y coordinate
+     * @return true if point (x,y) is in the window with size specified by the {@link World#renderer}, false otherwise
+     */
     private boolean inWindow(float x, float y) {
         return (x >= 0 && y >= 0 && x < windowWidth && y < windowHeight);
     }
