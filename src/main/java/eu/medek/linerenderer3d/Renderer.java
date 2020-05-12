@@ -2,7 +2,7 @@ package eu.medek.linerenderer3d;
 
 /**
  * Interface that needs to be implemented in order to use the 3DLineRenderer project - {@link World} class uses it to
- * correctly draw the calculated edges.
+ * draw the calculated edges.
  */
 public interface Renderer {
     /**
