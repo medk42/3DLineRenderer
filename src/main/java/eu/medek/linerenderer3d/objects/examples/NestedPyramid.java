@@ -30,7 +30,7 @@ public class NestedPyramid extends Object3D {
     private NestedPyramid[] children;
 
     /**
-     * Creates 4 children if recursionDepth > 0.
+     * Creates 4 children if recursionDepth &gt; 0.
      * @param recursionDepth number of levels of lines
      * @param recursionAngle angle at which the children pyramids are rotated away from center (0 means same rotation as
      *                       parent due to them being nested objects)

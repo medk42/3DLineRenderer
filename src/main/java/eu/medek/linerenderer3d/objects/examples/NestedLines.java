@@ -27,7 +27,7 @@ public class NestedLines extends Object3D {
     private NestedLines[] children;
 
     /**
-     * Creates 2 children if recursionDepth > 0.
+     * Creates 2 children if recursionDepth &gt; 0.
      * @param recursionDepth number of levels of lines
      * @see Object3D#Object3D(float[], float[], float[]) 
      */
