@@ -19,13 +19,13 @@ class World {
      */
     public enum DrawOrder {
         /**
-         * Sort the edges by the distance of their midpoint from camera. Then draw the furthest first. This is slow, but
-         * better looking.
+         * Sort the edges by the distance of their midpoint from camera. Then draw the furthest first. This is slower,
+         * but looks better.
          */
         SORT_EDGES,
         /**
          * Sort the objects by their distance from camera. Then draw the furthest first with edges in any order. This is
-         * fast, but doesn't look as good.
+         * faster, but doesn't look as good.
          */
         SORT_OBJECTS
     }
@@ -170,6 +170,13 @@ class World {
         return edges.size();
     }
 
+    /**
+     * Draw one frame of the scene using the {@link World#renderer}.
+     * @param camera position and rotation of the camera in the scene
+     * @param edgeLimit draw only a limited number of edges (-1 for all)
+     * @param drawOrder {@link DrawOrder Order} in which to draw edges - by
+     * {@link DrawOrder#SORT_OBJECTS sorting the objects} or by {@link DrawOrder#SORT_EDGES sorting the edges}.
+     */
     public void draw(final Camera camera, int edgeLimit, DrawOrder drawOrder) {
         if (vertices == null || edges == null) updateCache();
 
@@ -179,6 +186,12 @@ class World {
         }
     }
 
+    /**
+     * Draw one frame of the scene using the {@link World#renderer} where draw order is obtained by
+     * {@link DrawOrder#SORT_OBJECTS sorting the objects}.
+     * @param camera position and rotation of the camera in the scene
+     * @param edgeLimit draw only a limited number of edges (-1 for all)
+     */
     private void drawObjects(final Camera camera, int edgeLimit) {
         setToScreenMatrix();
         float[][] toCameraMatrix = camera.calculateToCameraMatrix();
@@ -220,6 +233,12 @@ class World {
         }
     }
 
+    /**
+     * Draw one frame of the scene using the {@link World#renderer} where draw order is obtained by
+     * {@link DrawOrder#SORT_EDGES sorting the edges}.
+     * @param camera position and rotation of the camera in the scene
+     * @param edgeLimit draw only a limited number of edges (-1 for all)
+     */
     private void drawEdges (final Camera camera, int edgeLimit) {
         setToScreenMatrix();
         float[][] toCameraMatrix = camera.calculateToCameraMatrix();
@@ -282,6 +301,14 @@ class World {
         return diffX*diffX + diffY*diffY + diffZ*diffZ;
     }
 
+    /**
+     * Draw part of the line specified by its endpoints (x0,y0) and (x1,y1) that is inside of the output window, where
+     * window size is specified by the {@link World#renderer}.
+     * @param x0 x coordinate of the first endpoint
+     * @param y0 y coordinate of the first endpoint
+     * @param x1 x coordinate of the second endpoint
+     * @param y1 y coordinate of the second endpoint
+     */
     private void drawLineClipped(float x0, float y0, float x1, float y1) {
         boolean p0In = inWindow(x0, y0), p1In = inWindow(x1, y1);
         if (p0In && p1In) renderer.line(x0, y0, x1, y1);
