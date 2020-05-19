@@ -128,13 +128,15 @@ public class Example extends PApplet {
             }
         });
 
-        // create a camera at the center of the scene
-        camera = new Camera(new float[]{0,0,0}, new float[]{0,0,0});
+
 
         // find out if there is a command line argument
         drawing_stl = args != null && args.length == 1;
 
         if (drawing_stl) { // if there is, add the STL object to the scene (it is moved half a unit up, so that it sits at y=0)
+            // create a camera offset from the center, so the object is visible
+            camera = new Camera(new float[]{0,-0.5f,-2}, new float[]{0,0,0});
+
             try {
                 world.addObject(new STLObject(new float[]{0,-0.5f,0}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Path.of(args[0]), true));
             } catch (IOException e) {
@@ -142,6 +144,9 @@ public class Example extends PApplet {
                 exit();
             }
         } else {  // otherwise create a demo scene
+            // create a camera at the center of the scene
+            camera = new Camera(new float[]{0,0,0}, new float[]{0,0,0});
+
             tree = new RecurTree(new float[]{0, 0, -2}, new float[]{0,0,0}, new float[]{1,1,1}, true);
             nestedPyramid = new NestedPyramid(new float[]{0, 0, 2}, new float[]{0,0,0}, new float[]{.5f,.5f,.5f}, 5, (float)(Math.PI/6));
 
@@ -282,8 +287,8 @@ public class Example extends PApplet {
         // notify the key controller
         keyController.keyPressed(key);
 
-        // create a new tree when space is pressed
-        if (key == ' ') {
+        // create a new tree when space is pressed (and we are drawing the demo scene)
+        if (key == ' ' && !drawing_stl) {
             tree.recalculateVertices();
             world.invalidateCache();
         }
