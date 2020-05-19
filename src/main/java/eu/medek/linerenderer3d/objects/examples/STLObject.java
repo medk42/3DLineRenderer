@@ -1,5 +1,6 @@
-package eu.medek.linerenderer3d.objects;
+package eu.medek.linerenderer3d.objects.examples;
 
+import eu.medek.linerenderer3d.objects.Object3D;
 import eu.medek.linerenderer3d.system.Vector;
 import eu.medek.linerenderer3d.system.stlreader.STLReader;
 import eu.medek.linerenderer3d.system.stlreader.STLTriangle;

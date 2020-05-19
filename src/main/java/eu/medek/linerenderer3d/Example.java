@@ -3,7 +3,7 @@ package eu.medek.linerenderer3d;
 import com.jogamp.newt.opengl.GLWindow;
 import eu.medek.linerenderer3d.camera.Camera;
 import eu.medek.linerenderer3d.camera.controllers.RotatingCameraController;
-import eu.medek.linerenderer3d.objects.STLObject;
+import eu.medek.linerenderer3d.objects.examples.STLObject;
 import eu.medek.linerenderer3d.objects.examples.*;
 import eu.medek.linerenderer3d.system.KeyController;
 import eu.medek.linerenderer3d.system.Vector;
