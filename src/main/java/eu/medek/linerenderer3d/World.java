@@ -12,7 +12,7 @@ import java.util.Arrays;
 /**
  * Class for representing and rendering the current 3D scene.
  */
-class World {
+public class World {
 
     /**
      * Order in which to draw edges.
