@@ -195,13 +195,19 @@ public class Example extends PApplet {
 
         // display extra debug information when toggled
         if (debug) {
+            boolean rotating = keyController.isToggled('i', true);
+            float localSpeed = (keyController.isToggled('l', true)) ? SPEED*3 : SPEED;
+
             fill(255);
             textSize(15);
             text("Total Vertices: " + world.getVertexCount(), 10, 20);
             text("Total edges: " + world.getEdgeCount(), 10, 40);
             text("Edge limit: " + (edgeLimitActive ? edgeLimit : "not active"), 10, 60);
             text("Draw order (sort by): " + drawOrder, 10, 80);
-            text("FPS: " + frameRate, 10, 100);
+            text("Rotating around center: " + rotating, 10, 100);
+            text("Crosshair shown: " + crosshair, 10, 120);
+            text("Speed: " + localSpeed, 10, 140);
+            text("FPS: " + frameRate, 10, 160);
         }
 
         // display crosshair in the middle of frame when toggled
@@ -264,6 +270,10 @@ public class Example extends PApplet {
             cameraPositionFloat[2] = cameraPosition.z;
 
 
+            if (mouseLock && !mouseMover.hasFocus()) {
+                mouseMover.setPointerVisible(true);
+                mouseLock = false;
+            }
             if (mouseLock) { // if mouse is currently controlling the camera, rotate the camera based on mouse movement
                 // get the distance from offset position
                 PVector mouseDelta = PVector.sub(new PVector(mouseX, mouseY), offset);
