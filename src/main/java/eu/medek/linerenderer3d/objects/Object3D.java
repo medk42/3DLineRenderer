@@ -90,7 +90,7 @@ public abstract class Object3D {
     public Object3D[] getNested() {
         if (getNestedSetupNeeded) {
             Object3D[] nested = getNestedAbstract();
-            for (var child : nested) child.parent = this;
+            for (Object3D child : nested) child.parent = this;
             getNestedSetupNeeded = false;
             return nested;
         } else return getNestedAbstract();
@@ -181,11 +181,11 @@ public abstract class Object3D {
         if (precalculatedVertices == null) {
             ArrayList<Pair<Vector[], float[][]>> allVertices = getVerticesWorldTransform();
             int verticesCount = 0;
-            for (var pair : allVertices) verticesCount += pair.getFirst().length;
+            for (Pair<Vector[], float[][]> pair : allVertices) verticesCount += pair.getFirst().length;
             precalculatedVertices = new Vector[verticesCount];
 
             int id = 0;
-            for (var pair : allVertices)
+            for (Pair<Vector[], float[][]> pair : allVertices)
                 for (int i = 0; i < pair.getFirst().length; i++, id++) precalculatedVertices[id] = Matrix3D.toPosition(Matrix3D.multiply(pair.getSecond(), Matrix3D.toVector(pair.getFirst()[i])));
         }
 
@@ -271,9 +271,9 @@ public abstract class Object3D {
         Object3D[] nested = getNested();
         ArrayList<Pair<Vector[], float[][]>> result = new ArrayList<>();
 
-        for (var child : nested) result.addAll(child.getVerticesWorldTransform());
+        for (Object3D child : nested) result.addAll(child.getVerticesWorldTransform());
 
-        for (var pair : result) pair.setSecond(Matrix3D.multiply(getTransformMatrix(), pair.getSecond()));
+        for (Pair<Vector[], float[][]> pair : result) pair.setSecond(Matrix3D.multiply(getTransformMatrix(), pair.getSecond()));
 
         result.add(new Pair<>(getVertices(), getTransformMatrix()));
 

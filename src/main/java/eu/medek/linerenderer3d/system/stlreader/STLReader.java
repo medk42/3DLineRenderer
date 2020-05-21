@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Scanner;
@@ -83,7 +84,7 @@ public class STLReader {
             }
         }
 
-        return trianglesList.toArray(STLTriangle[]::new);
+        return trianglesList.toArray(new STLTriangle[0]);
     }
 
     /**
@@ -157,7 +158,7 @@ public class STLReader {
      * @throws IOException if any error arises while reading the file
      */
     public static void main(String[] args) throws IOException {
-        Path path = Path.of(args[0]);
+        Path path = Paths.get(args[0]);
         STLReader reader = new STLReader(path);
         STLTriangle[] triangles = reader.tryRead();
         for (STLTriangle triangle : triangles) {

@@ -9,8 +9,9 @@ import eu.medek.linerenderer3d.system.KeyController;
 import eu.medek.linerenderer3d.system.Vector;
 import processing.core.PApplet;
 import processing.core.PVector;
+
 import java.io.IOException;
-import java.nio.file.Path;
+import java.nio.file.Paths;
 
 /**
  * Example usage of the 3DLineRenderer project - a demo scene that is explorable with mouse and keyboard. If filepath
@@ -138,7 +139,7 @@ public class Example extends PApplet {
             camera = new Camera(new float[]{0,-0.5f,-2}, new float[]{0,0,0});
 
             try {
-                world.addObject(new STLObject(new float[]{0,-0.5f,0}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Path.of(args[0]), true));
+                world.addObject(new STLObject(new float[]{0,-0.5f,0}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Paths.get(args[0]), true));
             } catch (IOException e) {
                 System.err.println("Wrong path or file format.");
                 exit();
@@ -156,10 +157,10 @@ public class Example extends PApplet {
             world.addObject(new NestedLines(new float[]{0, 0, 1}, new float[]{0,0,0}, new float[]{1f,1f,1f}, 5));
             world.addObject(nestedPyramid);
             try {
-                world.addObject(new STLObject(new float[]{-2,-0.5f,0}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Path.of("STLExamples", "Globe.stl"), true));
-                world.addObject(new STLObject(new float[]{0,-0.5f,0}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Path.of("STLExamples", "Tower.stl"), true));
-                world.addObject(new STLObject(new float[]{2,0,-0.25f}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Path.of("STLExamples", "NameTagIn.stl"), true));
-                world.addObject(new STLObject(new float[]{2,0,0.25f}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Path.of("STLExamples", "NameTagOut.stl"), true));
+                world.addObject(new STLObject(new float[]{-2,-0.5f,0}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Paths.get("STLExamples", "Globe.stl"), true));
+                world.addObject(new STLObject(new float[]{0,-0.5f,0}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Paths.get("STLExamples", "Tower.stl"), true));
+                world.addObject(new STLObject(new float[]{2,0,-0.25f}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Paths.get("STLExamples", "NameTagIn.stl"), true));
+                world.addObject(new STLObject(new float[]{2,0,0.25f}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Paths.get("STLExamples", "NameTagOut.stl"), true));
             } catch (IOException e) {
                 e.printStackTrace();
             }
