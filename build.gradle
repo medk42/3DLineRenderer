@@ -21,3 +21,12 @@ repositories {
 dependencies {
     compile group: 'org.processing', name: 'core', version: '3.3.7'
 }
+
+jar {
+    manifest {
+        attributes(
+                'Class-Path': configurations.compile.collect { it.getName() }.join(' '),
+                'Main-Class': "eu.medek.linerenderer3d.Example"
+        )
+    }
+}
