@@ -85,11 +85,19 @@ public class Example extends PApplet {
     private long millisStart = System.currentTimeMillis();
 
     /**
+     * true if we are running in compatibility mode, much slower, but should work everywhere
+     */
+    private boolean compatibility_mode = false;
+
+    /**
      * Window setup using the Processing library.
      */
     @Override
     public void settings() {
-        size(1000,660, P2D);
+        if (args != null && args.length >= 1) compatibility_mode = "compatibility".equals(args[0]);
+
+        if (compatibility_mode) size(1000,660);
+        else size(1000,660, P2D);
     }
 
     /**
@@ -98,7 +106,7 @@ public class Example extends PApplet {
     @Override
     public void setup() {
         // get reference to the OpenGL window, so we can set mouse position
-        mouseMover = (GLWindow) surface.getNative();
+        if (!compatibility_mode) mouseMover = (GLWindow) surface.getNative();
 
         // create the world object by supplying an implementation of the Renderer interface using the Processing library
         world = new World(new Renderer() {
@@ -130,15 +138,16 @@ public class Example extends PApplet {
 
 
 
-        // find out if there is a command line argument
-        drawing_stl = args != null && args.length == 1;
+        // find out if there is a command line argument for STL file
+        if (compatibility_mode) drawing_stl = args.length == 2;
+        else drawing_stl = args != null && args.length == 1;
 
         if (drawing_stl) { // if there is, add the STL object to the scene (it is moved half a unit up, so that it sits at y=0)
             // create a camera offset from the center, so the object is visible
             camera = new Camera(new float[]{0,-0.5f,-2}, new float[]{0,0,0});
 
             try {
-                world.addObject(new STLObject(new float[]{0,-0.5f,0}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Path.of(args[0]), true));
+                world.addObject(new STLObject(new float[]{0,-0.5f,0}, new float[]{HALF_PI,0,0}, new float[]{1,1,1}, Path.of(compatibility_mode ? args[1] : args[0]), true));
             } catch (IOException e) {
                 System.err.println("Wrong path or file format.");
                 exit();
@@ -269,22 +278,23 @@ public class Example extends PApplet {
             cameraPositionFloat[1] = cameraPosition.y;
             cameraPositionFloat[2] = cameraPosition.z;
 
+            if (!compatibility_mode) {
+                if (mouseLock && !mouseMover.hasFocus()) {
+                    mouseMover.setPointerVisible(true);
+                    mouseLock = false;
+                }
+                if (mouseLock) { // if mouse is currently controlling the camera, rotate the camera based on mouse movement
+                    // get the distance from offset position
+                    PVector mouseDelta = PVector.sub(new PVector(mouseX, mouseY), offset);
 
-            if (mouseLock && !mouseMover.hasFocus()) {
-                mouseMover.setPointerVisible(true);
-                mouseLock = false;
-            }
-            if (mouseLock) { // if mouse is currently controlling the camera, rotate the camera based on mouse movement
-                // get the distance from offset position
-                PVector mouseDelta = PVector.sub(new PVector(mouseX, mouseY), offset);
+                    // rotate the camera
+                    camera.getRotation()[1] += mouseDelta.x * TWO_PI / width;
+                    camera.getRotation()[0] += -mouseDelta.y * TWO_PI / height;
+                    camera.getRotation()[0] = constrain(camera.getRotation()[0], -HALF_PI, HALF_PI);
 
-                // rotate the camera
-                camera.getRotation()[1] += mouseDelta.x * TWO_PI / width;
-                camera.getRotation()[0] += -mouseDelta.y * TWO_PI / height;
-                camera.getRotation()[0] = constrain(camera.getRotation()[0], -HALF_PI, HALF_PI);
-
-                // move mouse back to the offset position
-                mouseMover.warpPointer((int)offset.x, (int)offset.y);
+                    // move mouse back to the offset position
+                    mouseMover.warpPointer((int) offset.x, (int) offset.y);
+                }
             }
         }
     }
@@ -318,13 +328,15 @@ public class Example extends PApplet {
      */
     @Override
     public void mousePressed() {
-        // lock/unlock mouse when pressed
-        mouseLock = !mouseLock;
-        if (mouseLock) { // set mouse position and make mouse pointer invisible
-            offset = new PVector(mouseX, mouseY);
-            mouseMover.setPointerVisible(false);
-        } else { // make mouse pointer visible
-            mouseMover.setPointerVisible(true);
+        if (!compatibility_mode) {
+            // lock/unlock mouse when pressed
+            mouseLock = !mouseLock;
+            if (mouseLock) { // set mouse position and make mouse pointer invisible
+                offset = new PVector(mouseX, mouseY);
+                mouseMover.setPointerVisible(false);
+            } else { // make mouse pointer visible
+                mouseMover.setPointerVisible(true);
+            }
         }
     }
 
