@@ -23,9 +23,14 @@ public class Example extends PApplet {
     private static final float PERIOD = 10;
 
     /**
-     * Default movement speed - distance per frame (speed varies with framerate as it is not based on delta time).
+     * Default movement speed (distance per second).
      */
-    private static final float SPEED = 0.03f;
+    private static final float SPEED = 1f;
+
+    /**
+     * Default camera rotation speed (radians per second) for rotation using keyboard.
+     */
+    private static final float ROTATION_SPEED = 1f;
 
     /**
      * World object, contains the scene.
@@ -88,6 +93,11 @@ public class Example extends PApplet {
      * true if we are running in compatibility mode, much slower, but should work everywhere
      */
     private boolean compatibility_mode = false;
+
+    /**
+     * Variable used for calculating delta time.
+     */
+    private long lastTime;
 
     /**
      * Window setup using the Processing library.
@@ -173,6 +183,8 @@ public class Example extends PApplet {
                 e.printStackTrace();
             }
         }
+
+        lastTime = System.nanoTime();
     }
 
     /**
@@ -180,13 +192,18 @@ public class Example extends PApplet {
      */
     @Override
     public void draw() {
+        // calculate delta time
+        long newTime = System.nanoTime();
+        long deltaTime = newTime - lastTime;
+        lastTime = newTime;
+
         if (!drawing_stl) { // if we are drawing the demo scene, animate the nestedPyramid
             nestedPyramid.updateRecursionAngle((System.currentTimeMillis() - millisStart) / 1000f * TWO_PI / 10);
             world.invalidateCache(); // don't forget to invalidate the world vertex/edge caches, since the vertex positions changed
         }
 
         // setup camera
-        handleCameraMovement();
+        handleCameraMovement(deltaTime);
 
         // clear the frame to black and set stroke (line) color to white
         background(0);
@@ -230,15 +247,20 @@ public class Example extends PApplet {
 
     /**
      * Set camera position and rotation using cameraController or mouse and keyboard.
+     * @param deltaTime delta time from last frame in nanoseconds
      */
-    void handleCameraMovement() {
+    void handleCameraMovement(long deltaTime) {
         if (keyController.isToggled('i', true)) { // if rotating around the center of the scene is toggled, do so
             // set camera position and rotation at the current time using cameraController
             cameraController.setupCamera(camera, (System.currentTimeMillis() - millisStart)/1000f);
             println("Showing time " + (System.currentTimeMillis() - millisStart)/1000f);
         } else {
+            // delta time in seconds
+            float deltaTimeS = deltaTime / 1_000_000_000f;
+
             // get speed based on a "fast speed" toggle
             float localSpeed = (keyController.isToggled('l', true)) ? SPEED*3 : SPEED;
+            localSpeed *= deltaTimeS;
 
             // create a "forward", "left" and "up" vectors from the camera rotation and localSpeed
             Vector forward = new Vector(0,0,1);
@@ -296,6 +318,19 @@ public class Example extends PApplet {
                     mouseMover.warpPointer((int) offset.x, (int) offset.y);
                 }
             }
+
+            // rotate camera using keyboard
+            boolean fPressed = keyController.isPressed('f', true);
+            boolean gPressed = keyController.isPressed('g', true);
+            boolean hPressed = keyController.isPressed('h', true);
+            boolean tPressed = keyController.isPressed('t', true);
+
+            float cameraRotationX = (hPressed ? 1 : 0) - (fPressed ? 1 : 0);
+            float cameraRotationY = (tPressed ? 1 : 0) - (gPressed ? 1 : 0);
+
+            camera.getRotation()[1] += cameraRotationX * deltaTimeS * ROTATION_SPEED;
+            camera.getRotation()[0] += cameraRotationY * deltaTimeS * ROTATION_SPEED;
+            camera.getRotation()[0] = constrain(camera.getRotation()[0], -HALF_PI, HALF_PI);
         }
     }
 
