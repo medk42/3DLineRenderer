@@ -8,14 +8,14 @@ Pro spuštění programu stačí zavolat `gradle run`. Programu lze předávat a
 `--args "<params>"`. Program se dá zavolat následovně:
 * `gradle run`: volání bez parametru spustí příklad scény
 * `gradle run --args "path-to-stl-file.stl"`: volání s cestou k STL souboru zobrazí wireframe objektu obsaženého v STL
-* `gradle run --args "compatibility"`: program spustí příklad scény v módu kompatibility (je třeba na Linuxu)
+* `gradle run --args "compatibility"`: program spustí příklad scény v módu kompatibility (je potřeba na Linuxu)
 * `gradle run --args "compatibility path-to-stl-file.stl"`: program zobrazí wireframe STL objektu v módu kompatibility 
-(je třeba na Linuxu)
+(je potřeba na Linuxu)
 
 Mód kompatibility má značně horší výkon, kvůli použití pomalejšího rendereru v příkladové třídě `Example` a nepodporuje
 otáčení kamery pomocí myši.
 
-Pro vyzkoušení otevírání STL souborů lze použít soubory ve složce STLExamples, tedy např. volání 
+Pro vyzkoušení otevírání STL souborů lze použít soubory ve složce `STLExamples`, tedy např. volání 
 `gradle run --args "STLExamples/Globe.stl"`.
 
 Pro vygenerování dokumentace lze zavolat `gradle javadoc`.
@@ -36,9 +36,9 @@ Pro vytvoření nového 3D objektu je třeba zdědit a dodefinovat abstraktní o
 
 ## Ovládání "Example"
 Pokud dostane na vstupu cestu k STL souboru, tak ho otevře a zobrazí, jinak načte demo scénu. Obsahuje `compatibility`
-mód, vzhledem k tomu, že výkonnější renderer nefunguje dobře na Linuxu. Viz. "Spuštění" pro více info. 
+mód protože výkonnější renderer nefunguje dobře na Linuxu. Viz. "Spuštění" pro více info. 
 
-Doporučuji zapnou debug a přepnout do SORT_OBJECTS módu. Okno jde maximalizovat a měnit jeho velikost.
+Doporučuji zapnout debug a přepnout do SORT_OBJECTS módu. Okno jde maximalizovat a měnit jeho velikost.
 
 ### Klávesnice
 * j = zapnout/vypnout limit na vykreslení pouze prvních 2000 hran
@@ -49,7 +49,7 @@ Doporučuji zapnou debug a přepnout do SORT_OBJECTS módu. Okno jde maximalizov
 * l = přepínání mezi normální a vyšší rychlostí pohybu kamery
 * WSADEQ = pohyb podle os scény (WS podél Z, AD podél X, EQ podél Y)
 * wsadeq = pohyb ve směru kamery (WD dopředu/dozadu, AD doleva/doprava, EQ nahoru/dolů)
-* fght/FGHT = otáčení kamery pomocí klávesnice
+* tgfh = otáčení kamery pomocí klávesnice
 * mezerník = vygeneruj nový strom (pouze v demo scéně)
 
 ### Myš
@@ -57,5 +57,5 @@ Libovolné tlačítko myši zamkne/odemkne její pohyb. Když je myš zamknutá,
 podle změny pozice myši mezi dvěma snímky pohne kamerou a pak myš přesune zpět do předchozí pozice. Myš je také odemčena
 pokud okno aplikace ztratí focus.
 
-Rotace kamery pomocí myši funguje pouze mimo `compatibility` mód - v `compativility` módu je třeba používat klávesnici
+Rotace kamery pomocí myši funguje pouze mimo `compatibility` mód - v `compatibility` módu je třeba používat klávesnici
 pro rotaci kamery.
