@@ -118,6 +118,9 @@ public class Example extends PApplet {
         // get reference to the OpenGL window, so we can set mouse position
         if (!compatibility_mode) mouseMover = (GLWindow) surface.getNative();
 
+        // allow resizable window
+        frame.setResizable(true);
+
         // create the world object by supplying an implementation of the Renderer interface using the Processing library
         world = new World(new Renderer() {
             @Override

@@ -38,7 +38,7 @@ Pro vytvoření nového 3D objektu je třeba zdědit a dodefinovat abstraktní o
 Pokud dostane na vstupu cestu k STL souboru, tak ho otevře a zobrazí, jinak načte demo scénu. Obsahuje `compatibility`
 mód, vzhledem k tomu, že výkonnější renderer nefunguje dobře na Linuxu. Viz. "Spuštění" pro více info. 
 
-Doporučuji zapnou debug a přepnout do SORT_OBJECTS módu. Okno jde maximalizovat, ale nejde měnit jeho velikost libovolně.
+Doporučuji zapnou debug a přepnout do SORT_OBJECTS módu. Okno jde maximalizovat a měnit jeho velikost.
 
 ### Klávesnice
 * j = zapnout/vypnout limit na vykreslení pouze prvních 2000 hran
